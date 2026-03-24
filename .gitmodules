@@ -1,0 +1,9 @@
+[submodule "game"]
+	path = game
+	url = git@github.com:transcendence-survivors/game.git
+[submodule "front"]
+	path = front
+	url = git@github.com:transcendence-survivors/frontend.git
+[submodule "back"]
+	path = back
+	url = git@github.com:transcendence-survivors/backend.git
