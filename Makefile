@@ -3,22 +3,14 @@ DOCKER_MANAGER = docker compose
 DEV_COMPOSE = docker-compose.dev.yml
 PROD_COMPOSE = docker-compose.prod.yml
 
+
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
-
 
 all: dev-d
 
 dev:
-	@echo "Starting DEV environment with Docker..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
-
-	@echo "Waiting for services..."
-	sleep 5
-
-	@echo "Running Prisma migrations..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec server pnpm prisma migrate dev
-
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build
 	@echo "DEV ready 🚀"
 
 dev-d:
@@ -28,8 +20,6 @@ dev-d:
 dev-stop:
 	@echo "Stopping DEV environment..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
-
-
 
 
 prod:
@@ -49,6 +39,9 @@ rebuild-dev:
 rebuild-prod:
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
 
+
+
+
 migrate-dev:
 	@echo "Running Prisma migrations (DEV)..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec server pnpm prisma migrate dev
@@ -64,9 +57,7 @@ fclean:
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
 	docker system prune -af --volumes
 
-# =========================
-# LOGS
-# =========================
+
 
 logs-dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f
