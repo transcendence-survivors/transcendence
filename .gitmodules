@@ -1,9 +1,9 @@
-[submodule "game"]
-	path = game
+[submodule "apps/game"]
+	path = apps/game
 	url = git@github.com:transcendence-survivors/game.git
-[submodule "client"]
-	path = client
+[submodule "apps/client"]
+	path = apps/client
 	url = git@github.com:transcendence-survivors/frontend.git
-[submodule "server"]
-	path = server
+[submodule "apps/server"]
+	path = apps/server
 	url = git@github.com:transcendence-survivors/backend.git
