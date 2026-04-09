@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: ./apps/server
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/app
+      NEST_PORT: 3001
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./apps/client
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+
+  game:
+    build:
+      context: ./apps/game
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3001/api

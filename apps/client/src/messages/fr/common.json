@@ -1,0 +1,53 @@
+{
+	"nav": {
+		"home": "Accueil",
+		"game": "Jeu",
+		"leaderboard": "Classement",
+		"profile": "Profil",
+		"settings": "Paramètres",
+		"logout": "Se déconnecter",
+		"posts": "Articles"
+	},
+	"home": {
+		"welcome": "Bienvenue sur Transcendence Survivor !"
+	},
+	"locale": {
+		"en": "English",
+		"fr": "Français",
+		"de": "Deutsch",
+		"zh": "中文",
+		"da": "Dansk"
+	},
+
+	"forms": {
+		"test": {
+			"name": "Nom",
+			"namePlaceholder": "Entrez votre nom",
+			"email": "E-Mail",
+			"emailPlaceholder": "john.doe@example.com",
+			"role": "Rôle",
+			"rolePlaceholder": "Choisissez votre rôle",
+			"userRoles": "Rôles d'utilisateur",
+			"admin": "Administrator",
+			"user": "Utilisateur",
+			"bio": "Biographie",
+			"bioPlaceholder": "Dites-nous un peu à propos de vous",
+			"acceptTerms": "J'accepte les termes et conditions",
+			"submit": "Soumettre",
+			"submitted": "Soumis",
+			"disabled": "Désactivé",
+			"reset": "Réinitialiser",
+			"emptyFieldsBtn": "Remplissez les champs"
+		},
+		"error": {
+			"required": "Ce champ est requis",
+			"invalidType": "Type invalide",
+			"invalidEmail": "Veuillez entrer une adresse e-mail valide",
+			"minLength": "La longueur minimale est de {min} caractères",
+			"maxLength": "La longueur maximale est de {max} caractères",
+			"pattern": "Format invalide",
+			"select": "Veuillez sélectionner une option",
+			"mustAcceptTerms": "Vous devez accepter les termes et conditions"
+		}
+	}
+}

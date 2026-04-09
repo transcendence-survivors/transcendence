@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - client
+      - server
+      - game
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+
+  server:
+    build:
+      context: ./apps/server
+    command: pnpm run start:dev
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/app
+      NODE_ENV: development
+      NEST_PORT: 3001
+    volumes:
+      - ./apps/server:/app
+
+  client:
+    build:
+      context: ./apps/client
+    command: pnpm run dev
+    volumes:
+      - ./apps/client:/app
+    environment:
+      NEXT_PUBLIC_API_URL: /api
+
+  game:
+    build:
+      context: ./apps/game
+    command: pnpm run dev
+    volumes:
+      - ./apps/game:/app
+    environment:
+      VITE_API_URL: /api

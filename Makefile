@@ -1,77 +1,83 @@
+DOCKER_MANAGER = docker compose
 
-PACKAGE_MANAGER 	= pnpm
-CMD_INSTALL 		= $(PACKAGE_MANAGER) install
-CMD_RUN_DEV 		= $(PACKAGE_MANAGER) run dev
-CMD_RUN_BUILD 		= $(PACKAGE_MANAGER) run build
-CMD_RUN_CLEAN 		= $(PACKAGE_MANAGER) run clean
+DEV_COMPOSE = docker-compose.dev.yml
+PROD_COMPOSE = docker-compose.prod.yml
 
-FRONTEND_DIR		= client
-BACKEND_DIR 		= server
-GAME_DIR 			= game
-
-all: dev
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
 
 
-
+all: dev-d
 
 dev:
-	$(MAKE) -j2 dev-frontend dev-game
+	@echo "Starting DEV environment with Docker..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
 
-dev-frontend:
-	@echo "Running frontend..."
-	cd $(FRONTEND_DIR) && $(CMD_INSTALL) && $(CMD_RUN_DEV)
+	@echo "Waiting for services..."
+	sleep 5
 
-dev-backend:
-	@echo "Running backend..."
-	cd $(BACKEND_DIR) && $(CMD_INSTALL) && $(CMD_RUN_DEV)
-dev-game:
-	@echo "Running game..."
-	cd $(GAME_DIR) && $(CMD_INSTALL) && $(CMD_RUN_DEV)
+	@echo "Running Prisma migrations..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec server pnpm prisma migrate dev
 
+	@echo "DEV ready 🚀"
+
+dev-d:
+	@echo "Starting DEV in background..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
 
 dev-stop:
-	@echo "Stopping development servers..."
-	# This is a simple way to stop the servers, but it may not be the most elegant solution.
-	# You may want to consider using a process manager like pm2 or concurrently for better control.
-	pkill -f "pnpm run dev"
-
-
-
-build: build-frontend build-backend build-game
-
-build-frontend:
-	@echo "Building frontend..."
-	cd $(FRONTEND_DIR) && $(PACKAGE_MANAGER) install && $(PACKAGE_MANAGER) run build
-
-build-backend:
-	@echo "Building backend..."
-	cd $(BACKEND_DIR) && $(PACKAGE_MANAGER) install && $(PACKAGE_MANAGER) run build
-
-build-game:
-	@echo "Building game..."
-	cd $(GAME_DIR) && $(PACKAGE_MANAGER) install && $(PACKAGE_MANAGER) run build
+	@echo "Stopping DEV environment..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
 
 
 
 
+prod:
+	@echo "Starting PROD environment with Docker..."
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build -d
 
-uninstall:
-	@echo "Uninstalling dependencies..."
-	cd $(FRONTEND_DIR) && $(PACKAGE_MANAGER) uninstall
-	cd $(BACKEND_DIR) && $(PACKAGE_MANAGER) uninstall
-	cd $(GAME_DIR) && $(PACKAGE_MANAGER) uninstall
+prod-stop:
+	@echo "Stopping PROD environment..."
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down
 
-clean: uninstall
+	
+
+
+rebuild-dev:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build --force-recreate
+
+rebuild-prod:
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
+
+migrate-dev:
+	@echo "Running Prisma migrations (DEV)..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec server pnpm prisma migrate dev
+
+
+clean:
+	@echo "Cleaning Docker system..."
+	docker system prune -f
 
 fclean:
-	@echo "Cleaning build artifacts..."
-	cd $(FRONTEND_DIR) && $(PACKAGE_MANAGER) run clean
-	cd $(BACKEND_DIR) && $(PACKAGE_MANAGER) run clean
-	cd $(GAME_DIR) && $(PACKAGE_MANAGER) run clean
+	@echo "Full cleanup (containers + volumes)..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
+	docker system prune -af --volumes
 
+# =========================
+# LOGS
+# =========================
 
+logs-dev:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f
 
-.PHONY: all 
-.PHONY: dev dev-frontend dev-backend dev-game dev-stop
-.PHONY: build build-frontend build-backend build-game 
-.PHONY: uninstall clean fclean
+logs-prod:
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) logs -f
+
+.PHONY: all \
+	dev dev-d dev-stop \
+	prod prod-stop \
+	rebuild-dev rebuild-prod \
+	migrate-dev \
+	clean fclean \
+	logs-dev logs-prod
