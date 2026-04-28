@@ -75,4 +75,13 @@
 		- une branche / feat dans l'ideal
 	- commit rules 
 		- fix/add/feat:
-	
+
+Modules :
+	[[Modules.canvas]]
+		27 points confirmes 
+		44 avec les optionnels
+
+
+1er juillet 
+	- Une version stable complete rendable
+	- Une deadline fixee pour overkill, de maniere controlee
