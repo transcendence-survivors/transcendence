@@ -1,6 +1,7 @@
 [submodule "apps/game"]
 	path = apps/game
 	url = git@github.com:transcendence-survivors/game.git
+	branch = main
 [submodule "apps/client"]
 	path = apps/client
 	url = git@github.com:transcendence-survivors/frontend.git
