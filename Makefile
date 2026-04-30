@@ -6,6 +6,7 @@ PROD_COMPOSE = docker-compose.prod.yml
 
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
+export DRI_PRIME=1 google-chrome
 
 all: dev-d
 

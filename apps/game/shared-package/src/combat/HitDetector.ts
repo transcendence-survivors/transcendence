@@ -34,7 +34,8 @@ export class HitDetector {
 			}
 
 			const dirToTarget = Vec3.normalize(diff);
-			const dot = dirToTarget.x * flatForward.x + dirToTarget.z * flatForward.z;
+			const dot =
+				dirToTarget.x * flatForward.x + dirToTarget.z * flatForward.z;
 			if (dot >= cosHalf) result.push(i);
 		}
 		return result;

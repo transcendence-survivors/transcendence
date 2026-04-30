@@ -27,15 +27,34 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_API_URL: ${API_URL}
+      NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
       JWT_SECRET: ${JWT_SECRET}
       NODE_ENV: development
+    depends_on:
+      - server
 
-  game:
+  game-client:
     build:
       context: ./apps/game
+      dockerfile: client/Dockerfile
     ports:
       - "5173:5173"
     environment:
-      VITE_API_URL: ${VITE_API_URL}
+      VITE_API_URL: ${API_URL}
+      VITE_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+      VITE_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
       NODE_ENV: development
+    depends_on:
+      - game-server
+
+  game-server:
+    build:
+      context: ./apps/game
+      dockerfile: server/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: ${GAME_SERVER_PORT}
+      API_URL: ${API_URL}
