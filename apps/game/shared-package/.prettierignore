@@ -1,6 +1,0 @@
-node_modules/
-dist/
-build/
-prisma/generated/
-prisma/migrations/
-*.db

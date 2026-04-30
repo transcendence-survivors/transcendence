@@ -10,3 +10,6 @@
 [submodule "apps/game/server"]
 	path = apps/game/server
 	url = git@github.com:transcendence-survivors/game-server.git
+[submodule "apps/game/shared-package"]
+	path = apps/game/shared-package
+	url = git@github.com:transcendence-survivors/game-shared.git
