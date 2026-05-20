@@ -1,47 +1,24 @@
 {
   "main": {
-    "id": "67237360e9c9999e",
+    "id": "75ffd83463d9241e",
     "type": "split",
     "children": [
       {
-        "id": "efffd41f75153cac",
+        "id": "c9370ad75ef8b719",
         "type": "tabs",
         "children": [
           {
-            "id": "2328e1f197f0628a",
+            "id": "061b6c151a01c8c5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Milestones.md",
+                "file": "Obsidian-doc-transcendance/Reunion 19 mai.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Milestones"
-            }
-          }
-        ]
-      },
-      {
-        "id": "1c9c6f97e8dc0097",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "2cb9b64342730d8a",
-            "type": "leaf",
-            "state": {
-              "type": "canvas",
-              "state": {
-                "file": "Modules.canvas",
-                "viewState": {
-                  "x": -753.0243578575195,
-                  "y": -751.7363737256744,
-                  "zoom": -2.214007225274929
-                }
-              },
-              "icon": "lucide-layout-dashboard",
-              "title": "Modules"
+              "title": "Reunion 19 mai"
             }
           }
         ]
@@ -50,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "5ebf7de3e202a74a",
+    "id": "f6087164bf0dcbac",
     "type": "split",
     "children": [
       {
-        "id": "954c9c10ef3263f9",
+        "id": "6ea60a4d88fc9f9d",
         "type": "tabs",
         "children": [
           {
-            "id": "792c8fe01d1a6d3e",
+            "id": "473a6c9daa5563fe",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -71,7 +48,7 @@
             }
           },
           {
-            "id": "f109e60b605e079d",
+            "id": "f5e2079b6ce8a8e8",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -88,7 +65,7 @@
             }
           },
           {
-            "id": "810b429e7e0ebbe6",
+            "id": "7d57f911b60e8999",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -104,19 +81,20 @@
     "width": 300
   },
   "right": {
-    "id": "d1036f2c679161b3",
+    "id": "269fc10982e0252c",
     "type": "split",
     "children": [
       {
-        "id": "8e8f00f17eb29771",
+        "id": "c7750cd6b94503df",
         "type": "tabs",
         "children": [
           {
-            "id": "23b87728790eb6bc",
+            "id": "54a4780245afcd9e",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Obsidian-doc-transcendance/Reunion 19 mai.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -126,24 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for Reunion 19 mai"
             }
           },
           {
-            "id": "2d23393c0e800997",
+            "id": "92d1ddd13ea179b6",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Obsidian-doc-transcendance/Reunion 19 mai.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from Reunion 19 mai"
             }
           },
           {
-            "id": "2d3d12946c7c2e9e",
+            "id": "04d9c547cf8c1403",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -158,7 +137,7 @@
             }
           },
           {
-            "id": "774cc7071efaaf0f",
+            "id": "71bda982f9e7e225",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -172,17 +151,18 @@
             }
           },
           {
-            "id": "934258168671efaa",
+            "id": "35f99fd30ea5acc0",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
+                "file": "Obsidian-doc-transcendance/Reunion 19 mai.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Reunion 19 mai"
             }
           }
         ]
@@ -200,17 +180,12 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false,
-      "obsidian-excalidraw-plugin:New drawing": false
+      "bases:Create new base": false
     }
   },
-  "active": "2328e1f197f0628a",
+  "active": "061b6c151a01c8c5",
   "lastOpenFiles": [
-    "Premiere reunion 28 avril.md",
-    "Preparation premieres semaines.md",
-    "Milestones.md",
-    "Modules.canvas",
-    "Untitled.base",
-    "Welcome.md"
+    "Obsidian-doc-transcendance/Installation stack.md",
+    "Obsidian-doc-transcendance/Reunion 19 mai.md"
   ]
 }
