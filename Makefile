@@ -14,6 +14,9 @@ dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build
 	@echo "DEV ready 🚀"
 
+dev-network:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up network-server network-client -d --build  
+
 dev-d:
 	@echo "Starting DEV in background..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
@@ -21,6 +24,8 @@ dev-d:
 dev-stop:
 	@echo "Stopping DEV environment..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
+
+
 
 
 prod:
@@ -57,8 +62,6 @@ fclean:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
 	docker system prune -af --volumes
-
-
 
 logs-dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f

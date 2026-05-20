@@ -8,9 +8,9 @@ services:
     ports:
       - "5432:5432"
 
-  server:
+  network-server:
     build:
-      context: ./apps/server
+      context: ./apps/network/server
     ports:
       - "3001:3001"
     environment:
@@ -21,9 +21,9 @@ services:
     depends_on:
       - postgres
 
-  client:
+  network-client:
     build:
-      context: ./apps/client
+      context: ./apps/network/client
     ports:
       - "3000:3000"
     environment:
@@ -32,7 +32,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       NODE_ENV: development
     depends_on:
-      - server
+      - network-server
 
   game-client:
     build:

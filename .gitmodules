@@ -1,8 +1,5 @@
-[submodule "apps/client"]
-	path = apps/client
-	url = git@github.com:transcendence-survivors/frontend.git
-[submodule "apps/server"]
-	path = apps/server
+[submodule "apps/network/server"]
+	path = apps/network/server
 	url = git@github.com:transcendence-survivors/backend.git
 [submodule "apps/game/client"]
 	path = apps/game/client
@@ -13,3 +10,6 @@
 [submodule "apps/game/shared-package"]
 	path = apps/game/shared-package
 	url = git@github.com:transcendence-survivors/game-shared.git
+[submodule "apps/network/client"]
+	path = apps/network/client
+	url = git@github.com:transcendence-survivors/frontend.git
