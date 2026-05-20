@@ -25,6 +25,11 @@ dev-stop:
 	@echo "Stopping DEV environment..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
 
+dev-fclean:
+	@echo "Cleaning DEV environment (containers + volumes)..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
+	docker system prune -af --volumes
+
 
 
 
