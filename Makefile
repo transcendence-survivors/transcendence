@@ -3,33 +3,54 @@ DOCKER_MANAGER = docker compose
 DEV_COMPOSE = docker-compose.dev.yml
 PROD_COMPOSE = docker-compose.prod.yml
 
+NETWORK_SERVER_CONTAINER = network-server
+NETWORK_CLIENT_CONTAINER = network-client
+GAME_SERVER_CONTAINER = game-server
+GAME_CLIENT_CONTAINER = game-client
+
 
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 export DRI_PRIME=1 google-chrome
 
-all: dev-d
+all: dev
 
 dev:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build
-	@echo "DEV ready 🚀"
-
-dev-network:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up network-server network-client -d --build  
-
-dev-d:
 	@echo "Starting DEV in background..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
+
+M_NAME :=
+
+dev-migrate:
+	@if [ -z "$(M_NAME)" ]; then \
+		echo "Error: M_NAME variable is not set. Please provide a migration name."; \
+		exit 1; \
+	fi
+	@echo "Running Prisma migrations (DEV)..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:create $(M_NAME)
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
+
+
+dev-network:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(NETWORK_SERVER_CONTAINER) $(NETWORK_CLIENT_CONTAINER) -d --build  
+
+dev-game:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build
 
 dev-stop:
 	@echo "Stopping DEV environment..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
+
+dev-clean: dev-stop
 
 dev-fclean:
 	@echo "Cleaning DEV environment (containers + volumes)..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
 	docker system prune -af --volumes
 
+dev-re: dev-fclean dev
+
+.PHONY: dev dev-migrate dev-network dev-game dev-stop dev-clean dev-fclean dev-re
 
 
 
@@ -44,8 +65,7 @@ prod-stop:
 	
 
 
-rebuild-dev:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build --force-recreate
+
 
 rebuild-prod:
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
@@ -62,11 +82,7 @@ clean:
 	@echo "Cleaning Docker system..."
 	docker system prune -f
 
-fclean:
-	@echo "Full cleanup (containers + volumes)..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
-	docker system prune -af --volumes
+fclean: dev-fclean
 
 logs-dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f

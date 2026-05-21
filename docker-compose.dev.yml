@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -7,6 +9,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   network-server:
     build:
@@ -20,6 +24,9 @@ services:
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - postgres
+    volumes:
+      - ./apps/network/server:/app
+      - /app/node_modules
 
   network-client:
     build:
@@ -33,6 +40,10 @@ services:
       NODE_ENV: development
     depends_on:
       - network-server
+    volumes:
+      - ./apps/network/client:/app
+      - /app/node_modules
+      - /app/.next
 
   game-client:
     build:
@@ -47,6 +58,9 @@ services:
       NODE_ENV: development
     depends_on:
       - game-server
+    volumes:
+      - ./apps/game:/app
+      - /app/client/node_modules
 
   game-server:
     build:
@@ -58,3 +72,9 @@ services:
       NODE_ENV: development
       PORT: ${GAME_SERVER_PORT}
       API_URL: ${API_URL}
+    volumes:
+      - ./apps/game:/app
+      - /app/server/node_modules
+
+volumes:
+  postgres_data:
