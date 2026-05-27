@@ -1,5 +1,6 @@
 services:
   postgres:
+    restart: unless-stopped
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -9,24 +10,33 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   network-server:
+    restart: unless-stopped
     build:
       context: ./apps/network/server
     ports:
       - "3001:3001"
+      - "51212:51212"
     environment:
       NODE_ENV: development
       DATABASE_URL: ${DATABASE_URL}
       NEST_PORT: ${NEST_PORT}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - ./apps/network/server:/app
       - /app/node_modules
 
   network-client:
+    restart: unless-stopped
     build:
       context: ./apps/network/client
     ports:
@@ -42,8 +52,14 @@ services:
       - ./apps/network/client:/app
       - /app/node_modules
       - /app/.next
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   game-client:
+    restart: unless-stopped
     build:
       context: ./apps/game
       dockerfile: client/Dockerfile
@@ -61,6 +77,7 @@ services:
       - /app/client/node_modules
 
   game-server:
+    restart: unless-stopped
     build:
       context: ./apps/game
       dockerfile: server/Dockerfile

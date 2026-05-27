@@ -35,7 +35,6 @@ dev-wait:
 	@echo "All containers running."
 
 dev-sync-modules:
-	sleep 5
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_SERVER_NODE_MODULES)
 	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_CLIENT_NODE_MODULES)
 	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/server/node_modules $(LOCAL_GAME_SERVER_NODE_MODULES)
@@ -92,10 +91,11 @@ rebuild-prod:
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
 
 
+studio:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:studio
 
 
-
-.PHONY: prod prod-stop rebuild-prod migrate-dev
+.PHONY: prod prod-stop rebuild-prod migrate-dev studio
 
 clean:
 	@echo "Cleaning Docker system..."
