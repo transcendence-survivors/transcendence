@@ -20,29 +20,30 @@ LOCAL_NETWORK_SERVER_NODE_MODULES = $(LOCAL_APP_DIR)/network/server
 LOCAL_GAME_CLIENT_NODE_MODULES = $(LOCAL_APP_DIR)/game/client
 LOCAL_GAME_SERVER_NODE_MODULES = $(LOCAL_APP_DIR)/game/server
 
-all: dev-sync
+all: dev
 
 dev:
 	@echo "Starting DEV in background..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
+	sleep 5
+	$(MAKE) dev-sync
 
-dev-wait:
-	@echo "Waiting for containers to be ready..."
-	@until docker inspect -f '{{.State.Running}}' $(NETWORK_SERVER_CONTAINER) 2>/dev/null | grep -q true; do sleep 1; done
-	@until docker inspect -f '{{.State.Running}}' $(NETWORK_CLIENT_CONTAINER) 2>/dev/null | grep -q true; do sleep 1; done
-	@until docker inspect -f '{{.State.Running}}' $(GAME_SERVER_CONTAINER) 2>/dev/null | grep -q true; do sleep 1; done
-	@until docker inspect -f '{{.State.Running}}' $(GAME_CLIENT_CONTAINER) 2>/dev/null | grep -q true; do sleep 1; done
-	@echo "All containers running."
-
-dev-sync-modules:
+dev-sync-network:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_SERVER_NODE_MODULES)
 	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_CLIENT_NODE_MODULES)
+
+dev-sync-game:
 	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/server/node_modules $(LOCAL_GAME_SERVER_NODE_MODULES)
 	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/client/node_modules $(LOCAL_GAME_CLIENT_NODE_MODULES)
 
-dev-sync: dev dev-sync-modules
+dev-sync: dev-sync-network dev-sync-game
+
 
 M_NAME :=
+
+dev-migrate-deploy:
+	@echo "Deploying Prisma migrations (DEV)..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:deploy
 
 dev-migrate:
 	@if [ -z "$(M_NAME)" ]; then \
@@ -52,12 +53,18 @@ dev-migrate:
 	@echo "Running Prisma migrations (DEV)..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:create $(M_NAME)
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
+	$(MAKE) dev-migrate-deploy
 
 dev-network:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(NETWORK_SERVER_CONTAINER) $(NETWORK_CLIENT_CONTAINER) -d --build
+	sleep 5
+	$(MAKE) dev-sync-network
+	$(MAKE) dev-migrate-deploy
 
 dev-game:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build
+	sleep 5
+	$(MAKE) dev-sync-game
 
 dev-stop:
 	@echo "Stopping DEV environment..."
@@ -73,8 +80,10 @@ dev-fclean:
 dev-re: dev-fclean dev
 
 
-.PHONY: dev dev-sync dev-migrate dev-network dev-game dev-stop dev-clean dev-fclean dev-re
-
+.PHONY: dev dev-sync dev-sync-network dev-sync-game \
+	dev-migrate-deploy dev-migrate \
+	dev-network dev-game \
+	dev-stop dev-clean dev-fclean dev-re
 
 
 
