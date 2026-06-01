@@ -44,6 +44,8 @@ M_NAME :=
 dev-migrate-deploy:
 	@echo "Deploying Prisma migrations (DEV)..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:deploy
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
+
 
 dev-migrate:
 	@if [ -z "$(M_NAME)" ]; then \

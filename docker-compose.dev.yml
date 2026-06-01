@@ -27,7 +27,10 @@ services:
       NODE_ENV: development
       DATABASE_URL: ${DATABASE_URL}
       NEST_PORT: ${NEST_PORT}
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION}
+      JWT_REFRESH_TOKEN_EXPIRATION: ${JWT_REFRESH_TOKEN_EXPIRATION}
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,7 +47,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${API_URL}
       NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
       NODE_ENV: development
     depends_on:
       - network-server
