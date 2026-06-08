@@ -38,3 +38,7 @@ next-env.d.ts
 # docs
 .obsidian
 .claude
+
+# game: pnpm store cache + Rust/wasm build artifacts
+apps/game/.pnpm-store/
+apps/game/terrain-gen/target/

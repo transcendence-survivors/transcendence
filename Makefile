@@ -63,6 +63,18 @@ dev-network:
 	$(MAKE) dev-sync-network
 	$(MAKE) dev-migrate-deploy
 
+TERRAIN_CRATE = apps/game/terrain-gen
+TERRAIN_WASM_OUT = $(TERRAIN_CRATE)/target/wasm32-unknown-unknown/release/terrain_gen.wasm
+TERRAIN_WASM_DST = apps/game/server/src/wasm/terrain.wasm
+
+# Rebuild the procedural terrain generator (Rust -> wasm) and drop it where the
+# dev game-server loads it. The Docker image builds this itself (Rust stage), but
+# the dev container mounts the host tree, so it uses this host-built copy.
+wasm:
+	cd $(TERRAIN_CRATE) && cargo build --release --target wasm32-unknown-unknown
+	cp $(TERRAIN_WASM_OUT) $(TERRAIN_WASM_DST)
+	@echo "✓ terrain wasm rebuilt -> $(TERRAIN_WASM_DST)"
+
 dev-game:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build
 	sleep 5
@@ -84,7 +96,7 @@ dev-re: dev-fclean dev
 
 .PHONY: dev dev-sync dev-sync-network dev-sync-game \
 	dev-migrate-deploy dev-migrate \
-	dev-network dev-game \
+	dev-network dev-game wasm \
 	dev-stop dev-clean dev-fclean dev-re
 
 

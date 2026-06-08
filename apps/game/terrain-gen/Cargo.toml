@@ -1,0 +1,17 @@
+[package]
+name = "terrain-gen"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic procedural terrain generator (Perlin2D height + Voronoi biomes), compiled to wasm32 and loaded by the Bun game server."
+
+[lib]
+crate-type = ["cdylib"]
+
+# Optimised for runtime speed (the server regenerates many chunks) and a small,
+# import-free wasm module Bun can instantiate with no glue.
+[profile.release]
+opt-level = 3
+lto = true
+panic = "abort"
+codegen-units = 1
+strip = true
