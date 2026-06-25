@@ -15,10 +15,11 @@ export DRI_PRIME=1 google-chrome
 DOCKER_APP_NODE_MODULES_DIR = /app
 
 LOCAL_APP_DIR = ./apps
-LOCAL_NETWORK_CLIENT_NODE_MODULES = $(LOCAL_APP_DIR)/network/client
-LOCAL_NETWORK_SERVER_NODE_MODULES = $(LOCAL_APP_DIR)/network/server
-LOCAL_GAME_CLIENT_NODE_MODULES = $(LOCAL_APP_DIR)/game/client
-LOCAL_GAME_SERVER_NODE_MODULES = $(LOCAL_APP_DIR)/game/server
+LOCAL_NETWORK_CLIENT_DIR = $(LOCAL_APP_DIR)/network/client
+LOCAL_NETWORK_SERVER_DIR = $(LOCAL_APP_DIR)/network/server
+LOCAL_GAME_CLIENT_DIR = $(LOCAL_APP_DIR)/game/client
+LOCAL_GAME_SHARED_DIR = $(LOCAL_APP_DIR)/game/shared-package
+LOCAL_GAME_SERVER_DIR = $(LOCAL_APP_DIR)/game/server
 
 all: dev
 
@@ -29,12 +30,13 @@ dev:
 	$(MAKE) dev-sync
 
 dev-sync-network:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_SERVER_NODE_MODULES)
-	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_CLIENT_NODE_MODULES)
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_SERVER_DIR)
+	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/node_modules $(LOCAL_NETWORK_CLIENT_DIR)
 
 dev-sync-game:
-	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/server/node_modules $(LOCAL_GAME_SERVER_NODE_MODULES)
-	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/client/node_modules $(LOCAL_GAME_CLIENT_NODE_MODULES)
+	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/server/node_modules $(LOCAL_GAME_SERVER_DIR)
+	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_CLIENT_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/client/node_modules $(LOCAL_GAME_CLIENT_DIR)
+	$(DOCKER_MANAGER) -f  $(DEV_COMPOSE) cp $(GAME_SERVER_CONTAINER):$(DOCKER_APP_NODE_MODULES_DIR)/server/node_modules $(LOCAL_GAME_SHARED_DIR)
 
 dev-sync: dev-sync-network dev-sync-game
 
@@ -63,18 +65,6 @@ dev-network:
 	$(MAKE) dev-sync-network
 	$(MAKE) dev-migrate-deploy
 
-TERRAIN_CRATE = apps/game/terrain-gen
-TERRAIN_WASM_OUT = $(TERRAIN_CRATE)/target/wasm32-unknown-unknown/release/terrain_gen.wasm
-TERRAIN_WASM_DST = apps/game/server/src/wasm/terrain.wasm
-
-# Rebuild the procedural terrain generator (Rust -> wasm) and drop it where the
-# dev game-server loads it. The Docker image builds this itself (Rust stage), but
-# the dev container mounts the host tree, so it uses this host-built copy.
-wasm:
-	cd $(TERRAIN_CRATE) && cargo build --release --target wasm32-unknown-unknown
-	cp $(TERRAIN_WASM_OUT) $(TERRAIN_WASM_DST)
-	@echo "✓ terrain wasm rebuilt -> $(TERRAIN_WASM_DST)"
-
 dev-game:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build
 	sleep 5
@@ -102,6 +92,8 @@ dev-re: dev-fclean dev
 
 
 
+
+
 prod:
 	@echo "Starting PROD environment with Docker..."
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build -d
@@ -125,6 +117,17 @@ clean:
 	docker system prune -f
 
 fclean: dev-fclean
+	rm -rf $(LOCAL_NETWORK_CLIENT_DIR)/node_modules
+	rm -rf $(LOCAL_NETWORK_CLIENT_DIR)/dist
+	rm -rf $(LOCAL_NETWORK_CLIENT_DIR)/.next	
+
+	rm -rf $(LOCAL_NETWORK_SERVER_DIR)/node_modules
+	rm -rf $(LOCAL_NETWORK_SERVER_DIR)/prisma/generated
+	rm -rf $(LOCAL_NETWORK_SERVER_DIR)/dist
+
+	rm -rf $(LOCAL_GAME_CLIENT_DIR)/node_modules
+	rm -rf $(LOCAL_GAME_SERVER_DIR)/node_modules
+	rm -rf $(LOCAL_GAME_SHARED_DIR)/node_modules
 
 logs-dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f
@@ -137,15 +140,7 @@ logs-prod:
 	logs-dev logs-prod
 
 
+seed:
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm prisma db seed
 
-
-
-
-
-
-
-
-
-
-
-	
+.PHONY: seed
