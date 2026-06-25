@@ -8,7 +8,7 @@
         "method": "GET",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:26:12.735Z",
+        "modified": "2026-06-25T15:29:08.361Z",
         "headers": [],
         "params": [
             {
@@ -46,7 +46,7 @@
         "method": "POST",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T16:50:41.450Z",
+        "modified": "2026-06-25T14:51:05.093Z",
         "headers": [],
         "params": [
             {
@@ -60,8 +60,8 @@
             "type": "json",
             "raw": [
                 "{",
-                "    \"username\": \"ben10\",",
-                "    \"email\": \"benoit.cabocel.3s35asdawdadawdassa@gmail.com\",",
+                "    \"username\": \"ben101\",",
+                "    \"email\": \"benoit.cabocel.3351@gmail.com\",",
                 "    \"password\": \"sENOI12s+\",",
                 "    \"bio\": \"\",",
                 "    \"dateOfBirth\": \"2003-09-10T00:00:00.000Z\",",
@@ -84,7 +84,7 @@
         "method": "POST",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:28:05.735Z",
+        "modified": "2026-06-25T15:02:18.262Z",
         "headers": [],
         "params": [
             {
@@ -98,7 +98,7 @@
             "type": "json",
             "raw": [
                 "{",
-                "    \"blockedUserId\": \"0003a9b5-f2cd-4a3d-a71b-abd18be190c4\"",
+                "    \"blockedUserId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
                 "}"
             ],
             "form": []
@@ -113,7 +113,7 @@
         "method": "POST",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:26:06.564Z",
+        "modified": "2026-06-25T15:37:39.846Z",
         "headers": [],
         "params": [
             {
@@ -139,11 +139,11 @@
         "colId": "history",
         "containerId": "",
         "name": "POST Block Copy",
-        "url": "http://localhost:3000/api/blocks/0000dc71-2fbb-4fd2-bbc1-61bd54753653",
+        "url": "http://localhost:3000/api/blocks/25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7",
         "method": "DELETE",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T17:27:11.834Z",
+        "modified": "2026-06-25T14:54:32.320Z",
         "headers": [],
         "params": [
             {
@@ -163,7 +163,7 @@
         "method": "GET",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:27:50.938Z",
+        "modified": "2026-06-25T15:02:31.490Z",
         "headers": [],
         "params": [
             {
@@ -179,11 +179,11 @@
         "colId": "history",
         "containerId": "",
         "name": "GET Friends",
-        "url": "http://localhost:3000/api/friends?status=ACCEPTED",
+        "url": "http://localhost:3000/api/friends?status=PENDING&request=incoming",
         "method": "GET",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:40:22.733Z",
+        "modified": "2026-06-25T15:37:54.094Z",
         "headers": [],
         "params": [
             {
@@ -194,7 +194,12 @@
             },
             {
                 "name": "status",
-                "value": "ACCEPTED",
+                "value": "PENDING",
+                "isPath": false
+            },
+            {
+                "name": "request",
+                "value": "incoming",
                 "isPath": false
             }
         ]
@@ -208,7 +213,7 @@
         "method": "POST",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:40:24.908Z",
+        "modified": "2026-06-25T15:35:15.404Z",
         "headers": [],
         "params": [
             {
@@ -222,7 +227,7 @@
             "type": "json",
             "raw": [
                 "{",
-                "  \"friendId\": \"000f5983-f099-4a12-986b-1d68f04f7d44\"",
+                "  \"friendId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
                 "}"
             ],
             "form": []
@@ -237,7 +242,7 @@
         "method": "PUT",
         "sortNum": 0,
         "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-24T23:40:36.164Z",
+        "modified": "2026-06-25T14:59:39.649Z",
         "headers": [],
         "params": [
             {
@@ -251,10 +256,30 @@
             "type": "json",
             "raw": [
                 "{",
-                "  \"friendId\": \"000f5983-f099-4a12-986b-1d68f04f7d44\"",
+                "  \"friendId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
                 "}"
             ],
             "form": []
         }
+    },
+    {
+        "_id": "a1be44b9-dbe2-4a3c-8d36-f7a84407895d",
+        "colId": "history",
+        "containerId": "",
+        "name": "DELETE Friend",
+        "url": "http://localhost:3000/api/friends/25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2025-05-01T18:49:29.396Z",
+        "modified": "2026-06-25T15:35:00.332Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ]
     }
 ]
