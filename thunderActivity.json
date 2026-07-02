@@ -281,5 +281,34 @@
                 "isPath": false
             }
         ]
+    },
+    {
+        "_id": "b3f1a7d2-6c4e-4a9b-9e2d-1f8c5a6e0d3b",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Post",
+        "url": "http://localhost:3000/api/posts",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2026-07-01T00:00:00.000Z",
+        "modified": "2026-07-01T00:00:00.000Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ],
+        "body": {
+            "type": "json",
+            "raw": [
+                "{",
+                "    \"content\": \"Mon premier post !\"",
+                "}"
+            ],
+            "form": []
+        }
     }
 ]

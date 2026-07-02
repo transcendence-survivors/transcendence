@@ -30,19 +30,19 @@ CHAT_SOCKET_PORT=3001
 # URLS
 # =========================
 FRONTEND_URL=http://localhost:3000/
-API_URL=http://network-server:${NEST_PORT}/api/v1/
+API_URL=http://network-server:${NEST_PORT}/api/v1
 CHAT_SOCKET_URL=http://network-server:${CHAT_SOCKET_PORT}
 GAME_SOCKET_URL=http://game-server:${GAME_SERVER_PORT}
 
 # =========================
 # SMTP
 # =========================
-SMTP_HOST=smtp.example.com
+SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=username
-SMTP_PASS=password
-SMTP_FROM_NAME=My App
-SMTP_FROM_EMAIL=noreply@myapp.com
+SMTP_USER=transcendence.survivor@gmail.com
+SMTP_PASS=thur izaz iipc zezg
+SMTP_FROM_NAME=Transcendence-survivor
+SMTP_FROM_EMAIL=transcendence.survivor@gmail.com
 
 # =========================
 # MINIO

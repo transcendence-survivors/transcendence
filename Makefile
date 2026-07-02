@@ -1,4 +1,4 @@
-DOCKER_MANAGER = docker compose
+DOCKER_MANAGER = docker-compose
 
 DEV_COMPOSE = docker-compose.dev.yml
 PROD_COMPOSE = docker-compose.prod.yml
