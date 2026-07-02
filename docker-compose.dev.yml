@@ -15,6 +15,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-net
 
   network-server:
     restart: unless-stopped
@@ -28,27 +30,25 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       FRONTEND_URL: ${FRONTEND_URL}
       NEST_PORT: ${NEST_PORT}
-
       JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
       JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
-
       JWT_ACCESS_TOKEN_EXPIRATION_S: ${JWT_ACCESS_TOKEN_EXPIRATION_S}
       JWT_REFRESH_TOKEN_EXPIRATION_S: ${JWT_REFRESH_TOKEN_EXPIRATION_S}
       RESET_PASSWORD_TOKEN_EXPIRATION_S: ${RESET_PASSWORD_TOKEN_EXPIRATION_S}
-
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
-
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
       - ./apps/network/server:/app
       - /app/node_modules
+    networks:
+      - app-net
 
   network-client:
     restart: unless-stopped
@@ -59,6 +59,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${API_URL}
       NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+      API_INTERNAL: ${API_INTERNAL}
       JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
       NODE_ENV: development
     depends_on:
@@ -72,6 +73,26 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
+    networks:
+      - app-net
+
+  game-server:
+    restart: unless-stopped
+    build:
+      context: ./apps/game
+      dockerfile: server/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: ${GAME_SERVER_PORT}
+      API_URL: ${API_URL}
+    volumes:
+      - ./apps/game:/app
+      - /app/server/node_modules
+    networks:
+      - app-net
 
   game-client:
     restart: unless-stopped
@@ -90,21 +111,12 @@ services:
     volumes:
       - ./apps/game:/app
       - /app/client/node_modules
-
-  game-server:
-    restart: unless-stopped
-    build:
-      context: ./apps/game
-      dockerfile: server/Dockerfile
-    ports:
-      - "4000:4000"
-    environment:
-      NODE_ENV: development
-      PORT: ${GAME_SERVER_PORT}
-      API_URL: ${API_URL}
-    volumes:
-      - ./apps/game:/app
-      - /app/server/node_modules
+    networks:
+      - app-net
 
 volumes:
   postgres_data:
+
+networks:
+  app-net:
+    driver: bridge

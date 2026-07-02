@@ -1,5 +1,113 @@
 [
     {
+        "_id": "7c5cb32c-5ff9-4ddc-8e01-25dd65429de0",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Auth Register",
+        "url": "http://localhost:3000/api/auth/register",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2025-01-01T18:49:29.396Z",
+        "modified": "2026-06-26T17:34:31.000Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ],
+        "body": {
+            "type": "json",
+            "raw": [
+                "{",
+                "    \"username\": \"ben1011\",",
+                "    \"email\": \"benoit.cabocel.11335@gmail.com\",",
+                "    \"password\": \"sENOI12s+\",",
+                "    \"bio\": \"\",",
+                "    \"dateOfBirth\": \"2003-09-10T00:00:00.000Z\",",
+                "    \"displayName\": \"ben10\",",
+                "    \"firstName\": \"Benoit\",",
+                "    \"lastName\": \"CABOCEL\",",
+                "    \"gender\": \"PREFER_NOT_TO_SAY\",",
+                "    \"localePreference\": \"FR\"",
+                "}"
+            ],
+            "form": []
+        }
+    },
+    {
+        "_id": "01c73eaa-af9d-43eb-9b01-a6243cac7226",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Auth Logout",
+        "url": "http://localhost:3000/api/auth/logout",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2025-01-01T18:49:29.396Z",
+        "modified": "2026-06-26T13:18:05.765Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ]
+    },
+    {
+        "_id": "7e27c88b-18fd-4f60-ac51-f97ac9c439ab",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Auth Login",
+        "url": "http://localhost:3000/api/auth/login",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2025-01-01T18:49:29.396Z",
+        "modified": "2026-06-26T17:17:03.993Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ],
+        "body": {
+            "type": "json",
+            "raw": [
+                "{",
+                "    \"usernameOrEmail\": \"ben10\",",
+                "    \"password\": \"sENOI12s+\"",
+                "}"
+            ],
+            "form": []
+        }
+    },
+    {
+        "_id": "6ab86835-830c-49d4-9887-707b094aa108",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Auth Refresh",
+        "url": "http://localhost:3000/api/auth/refresh",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2025-01-01T18:49:29.396Z",
+        "modified": "2026-06-26T13:18:07.607Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ]
+    },
+    {
         "_id": "ae2caf15-d8c2-45bf-8f79-d85f6e2ccd58",
         "colId": "history",
         "containerId": "",
@@ -7,8 +115,8 @@
         "url": "http://localhost:3000/api/users",
         "method": "GET",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:29:08.361Z",
+        "created": "2025-01-30T18:49:29.396Z",
+        "modified": "2026-06-26T17:16:42.506Z",
         "headers": [],
         "params": [
             {
@@ -38,44 +146,6 @@
         }
     },
     {
-        "_id": "7c5cb32c-5ff9-4ddc-8e01-25dd65429de0",
-        "colId": "history",
-        "containerId": "",
-        "name": "POST Auth Register",
-        "url": "http://localhost:3000/api/auth/register",
-        "method": "POST",
-        "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T14:51:05.093Z",
-        "headers": [],
-        "params": [
-            {
-                "name": "email",
-                "value": "test",
-                "isDisabled": true,
-                "isPath": false
-            }
-        ],
-        "body": {
-            "type": "json",
-            "raw": [
-                "{",
-                "    \"username\": \"ben101\",",
-                "    \"email\": \"benoit.cabocel.3351@gmail.com\",",
-                "    \"password\": \"sENOI12s+\",",
-                "    \"bio\": \"\",",
-                "    \"dateOfBirth\": \"2003-09-10T00:00:00.000Z\",",
-                "    \"displayName\": \"ben10\",",
-                "    \"firstName\": \"Benoit\",",
-                "    \"lastName\": \"CABOCEL\",",
-                "    \"gender\": \"PREFER_NOT_TO_SAY\",",
-                "    \"localePreference\": \"FR\"",
-                "}"
-            ],
-            "form": []
-        }
-    },
-    {
         "_id": "cff4452a-eeb2-44a0-8956-73cb73f6c8d2",
         "colId": "history",
         "containerId": "",
@@ -83,8 +153,8 @@
         "url": "http://localhost:3000/api/blocks",
         "method": "POST",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:02:18.262Z",
+        "created": "2025-02-01T18:49:29.396Z",
+        "modified": "2026-02-01T13:01:53.299Z",
         "headers": [],
         "params": [
             {
@@ -98,37 +168,7 @@
             "type": "json",
             "raw": [
                 "{",
-                "    \"blockedUserId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
-                "}"
-            ],
-            "form": []
-        }
-    },
-    {
-        "_id": "01c73eaa-af9d-43eb-9b01-a6243cac7226",
-        "colId": "history",
-        "containerId": "",
-        "name": "POST Auth Login",
-        "url": "http://localhost:3000/api/auth/login",
-        "method": "POST",
-        "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:37:39.846Z",
-        "headers": [],
-        "params": [
-            {
-                "name": "email",
-                "value": "test",
-                "isDisabled": true,
-                "isPath": false
-            }
-        ],
-        "body": {
-            "type": "json",
-            "raw": [
-                "{",
-                "    \"usernameOrEmail\": \"ben10\",",
-                "    \"password\": \"sENOI12s+\"",
+                "    \"blockedUserId\": \"ae114b00-7b5e-4e3c-ae86-dcfb250c747f\"",
                 "}"
             ],
             "form": []
@@ -138,12 +178,12 @@
         "_id": "7c448818-108d-4c48-a335-f60a2f98ef58",
         "colId": "history",
         "containerId": "",
-        "name": "POST Block Copy",
-        "url": "http://localhost:3000/api/blocks/25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7",
+        "name": "DELETE Block",
+        "url": "http://localhost:3000/api/blocks/ae114b00-7b5e-4e3c-ae86-dcfb250c747f",
         "method": "DELETE",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T14:54:32.320Z",
+        "created": "2025-02-01T18:49:29.396Z",
+        "modified": "2026-02-01T13:01:43.704Z",
         "headers": [],
         "params": [
             {
@@ -153,6 +193,35 @@
                 "isPath": false
             }
         ]
+    },
+    {
+        "_id": "951872aa-01f5-4819-9a5c-1b17698b95c9",
+        "colId": "history",
+        "containerId": "",
+        "name": "POST Friend Request",
+        "url": "http://localhost:3000/api/friends/requests",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2025-02-01T18:49:29.396Z",
+        "modified": "2026-06-26T17:16:49.155Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ],
+        "body": {
+            "type": "json",
+            "raw": [
+                "{",
+                "  \"friendId\": \"f41f3adc-2b26-4a12-b7f6-ac4e4e30c8e8\"",
+                "}"
+            ],
+            "form": []
+        }
     },
     {
         "_id": "072380a4-332c-4b2b-8029-3368ce769b82",
@@ -162,14 +231,79 @@
         "url": "http://localhost:3000/api/blocks",
         "method": "GET",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:02:31.490Z",
+        "created": "2025-02-02T18:49:29.396Z",
+        "modified": "2026-02-02T12:58:27.651Z",
         "headers": [],
         "params": [
             {
                 "name": "email",
                 "value": "test",
                 "isDisabled": true,
+                "isPath": false
+            }
+        ]
+    },
+    {
+        "_id": "f85951a5-2436-4dcf-975f-0eb3645af287",
+        "colId": "history",
+        "containerId": "",
+        "name": "DELETE Friend Request",
+        "url": "http://localhost:3000/api/friends/requests/ae114b00-7b5e-4e3c-ae86-dcfb250c747f",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2025-02-05T18:49:29.396Z",
+        "modified": "2026-02-05T13:01:41.809Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ]
+    },
+    {
+        "_id": "d39d5a3b-71a1-45f2-b198-8f456413b7a3",
+        "colId": "history",
+        "containerId": "",
+        "name": "PATCH Friend Request",
+        "url": "http://localhost:3000/api/friends/requests/ce07b343-3f3a-4cdb-8162-f43bf45f8d16",
+        "method": "PATCH",
+        "sortNum": 0,
+        "created": "2025-02-06T18:49:29.396Z",
+        "modified": "2026-06-26T17:17:10.611Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            }
+        ]
+    },
+    {
+        "_id": "d38c2ce9-c39a-4a3f-ba2e-fa24afdf6eca",
+        "colId": "history",
+        "containerId": "",
+        "name": "GET Friends Request",
+        "url": "http://localhost:3000/api/friends/requests?direction=outgoing",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2025-02-07T18:49:29.396Z",
+        "modified": "2026-06-26T17:16:39.545Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "email",
+                "value": "test",
+                "isDisabled": true,
+                "isPath": false
+            },
+            {
+                "name": "direction",
+                "value": "outgoing",
                 "isPath": false
             }
         ]
@@ -179,99 +313,31 @@
         "colId": "history",
         "containerId": "",
         "name": "GET Friends",
-        "url": "http://localhost:3000/api/friends?status=PENDING&request=incoming",
+        "url": "http://localhost:3000/api/friends",
         "method": "GET",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:37:54.094Z",
+        "created": "2025-02-10T18:49:29.396Z",
+        "modified": "2026-06-26T17:34:24.329Z",
         "headers": [],
         "params": [
             {
                 "name": "email",
                 "value": "test",
                 "isDisabled": true,
-                "isPath": false
-            },
-            {
-                "name": "status",
-                "value": "PENDING",
-                "isPath": false
-            },
-            {
-                "name": "request",
-                "value": "incoming",
                 "isPath": false
             }
         ]
     },
     {
-        "_id": "afeb9939-ccdc-420a-8fd1-a5484f901a69",
+        "_id": "56b21bf0-63b7-429d-b2cd-69691b0764b5",
         "colId": "history",
         "containerId": "",
-        "name": "POST Friend",
-        "url": "http://localhost:3000/api/friends",
-        "method": "POST",
-        "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:35:15.404Z",
-        "headers": [],
-        "params": [
-            {
-                "name": "email",
-                "value": "test",
-                "isDisabled": true,
-                "isPath": false
-            }
-        ],
-        "body": {
-            "type": "json",
-            "raw": [
-                "{",
-                "  \"friendId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
-                "}"
-            ],
-            "form": []
-        }
-    },
-    {
-        "_id": "00cf9390-55a0-4570-84f7-9a7d63ce6bc1",
-        "colId": "history",
-        "containerId": "",
-        "name": "PUT Friend",
-        "url": "http://localhost:3000/api/friends",
-        "method": "PUT",
-        "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T14:59:39.649Z",
-        "headers": [],
-        "params": [
-            {
-                "name": "email",
-                "value": "test",
-                "isDisabled": true,
-                "isPath": false
-            }
-        ],
-        "body": {
-            "type": "json",
-            "raw": [
-                "{",
-                "  \"friendId\": \"25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7\"",
-                "}"
-            ],
-            "form": []
-        }
-    },
-    {
-        "_id": "a1be44b9-dbe2-4a3c-8d36-f7a84407895d",
-        "colId": "history",
-        "containerId": "",
-        "name": "DELETE Friend",
-        "url": "http://localhost:3000/api/friends/25a9f9ab-03d3-41bf-8298-b80d0a9d5fe7",
+        "name": "DELETE Friends",
+        "url": "http://localhost:3000/api/friends/dd4508fe-d0b8-4a03-88c7-be0da0779948",
         "method": "DELETE",
         "sortNum": 0,
-        "created": "2025-05-01T18:49:29.396Z",
-        "modified": "2026-06-25T15:35:00.332Z",
+        "created": "2025-02-10T18:49:29.396Z",
+        "modified": "2026-02-10T12:36:42.890Z",
         "headers": [],
         "params": [
             {
