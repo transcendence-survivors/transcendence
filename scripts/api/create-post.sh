@@ -5,7 +5,7 @@ API_URL="${API_URL:-http://localhost:3001/api/v1}"
 COOKIE_JAR="$(dirname "$0")/.cookies"
 
 DEFAULT_CONTENT="Post créé depuis le script"
-DEFAULT_IMAGE_PATH="/private/tmp/claude-501/-Users-noafanizzi-Documents-42-transcendence/7f492e88-eb1e-4af9-b4da-b5dda7706074/scratchpad/test.png"
+DEFAULT_IMAGE_PATH="scripts/robot.png"
 
 CONTENT="${1:-$DEFAULT_CONTENT}"
 IMAGE_PATH="${2:-$DEFAULT_IMAGE_PATH}"
