@@ -20,11 +20,14 @@ services:
 
   minio:
     restart: unless-stopped
-    image: minio/minio
-    command: server /data --console-address ":9001"
+    build:
+      context: ./apps/network/minio
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
+      MINIO_BUCKET_POST_IMAGES: ${MINIO_BUCKET_POST_IMAGES}
+      MINIO_BUCKET_POST_VIDEOS: ${MINIO_BUCKET_POST_VIDEOS}
     ports:
       - "${MINIO_API_PORT}:9000"
       - "${MINIO_CONSOLE_PORT}:9001"
@@ -35,6 +38,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-net
 
   network-server:
     restart: unless-stopped
@@ -53,6 +58,7 @@ services:
       JWT_ACCESS_TOKEN_EXPIRATION_S: ${JWT_ACCESS_TOKEN_EXPIRATION_S}
       JWT_REFRESH_TOKEN_EXPIRATION_S: ${JWT_REFRESH_TOKEN_EXPIRATION_S}
       RESET_PASSWORD_TOKEN_EXPIRATION_S: ${RESET_PASSWORD_TOKEN_EXPIRATION_S}
+
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: ${SMTP_USER}
@@ -64,8 +70,9 @@ services:
       MINIO_PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
-
+      MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
+      MINIO_BUCKET_POST_IMAGES: ${MINIO_BUCKET_POST_IMAGES}
+      MINIO_BUCKET_POST_VIDEOS: ${MINIO_BUCKET_POST_VIDEOS}
     depends_on:
       postgres:
         condition: service_healthy
