@@ -42,3 +42,6 @@ next-env.d.ts
 # game: pnpm store cache + Rust/wasm build artifacts
 apps/game/.pnpm-store/
 apps/game/terrain-gen/target/
+
+# api test scripts
+scripts/api/.cookies
