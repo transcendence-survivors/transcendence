@@ -66,7 +66,7 @@ dev-network:
 	$(MAKE) dev-migrate-deploy
 
 dev-game:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up $(GAME_SERVER_CONTAINER) $(GAME_CLIENT_CONTAINER) -d --build -V
 	sleep 5
 	$(MAKE) dev-sync-game
 
