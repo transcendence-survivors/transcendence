@@ -16,7 +16,7 @@ until mc ls local >/dev/null 2>&1; do
 	sleep 1
 done
 
-BUCKETS="${MINIO_BUCKET_AVATARS:-avatars} ${MINIO_BUCKET_POST_IMAGES:-post-images} ${MINIO_BUCKET_POST_VIDEOS:-post-videos}"
+BUCKETS="${MINIO_BUCKET_AVATARS:-avatars} ${MINIO_BUCKET_POST:-post} ${MINIO_BUCKET_CHAT:-chat}"
 
 for bucket in $BUCKETS; do
 	mc mb --ignore-existing "local/$bucket"
