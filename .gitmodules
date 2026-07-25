@@ -2,7 +2,7 @@
 	path = apps/network/server
 	url = git@github.com:transcendence-survivors/backend.git
 [submodule "apps/game/client"]
-	path = apps/game/client
+	path = apps/game/ui
 	url = git@github.com:transcendence-survivors/game-client.git
 [submodule "apps/game/server"]
 	path = apps/game/server

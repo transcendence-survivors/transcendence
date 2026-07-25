@@ -91,21 +91,33 @@ services:
   network-client:
     restart: unless-stopped
     build:
-      context: ./apps/network/client
+      context: .
+      dockerfile: apps/network/client/Dockerfile
     ports:
       - "3000:3000"
     environment:
+      NODE_ENV: development
       NEXT_PUBLIC_API_URL: ${API_URL}
       NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+      NEXT_PUBLIC_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+      NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
       API_INTERNAL: ${API_INTERNAL}
       JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
-      NODE_ENV: development
     depends_on:
       - network-server
+      - game-server
     volumes:
-      - ./apps/network/client:/app
+      - ./apps/network/client:/app/apps/network/client
+      - /app/apps/network/client/node_modules
+      - /app/apps/network/client/.next
+
+      - ./apps/game/ui:/app/apps/game/ui
+      - /app/apps/game/ui/node_modules
+
+      - ./apps/game/shared-package:/app/apps/game/shared-package
+      - /app/apps/game/shared-package/node_modules
+
       - /app/node_modules
-      - /app/.next
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 10s
@@ -118,8 +130,8 @@ services:
   game-server:
     restart: unless-stopped
     build:
-      context: ./apps/game
-      dockerfile: server/Dockerfile
+      context: .
+      dockerfile: apps/game/server/Dockerfile
     ports:
       - "4000:4000"
     environment:
@@ -127,28 +139,10 @@ services:
       PORT: ${GAME_SERVER_PORT}
       API_URL: ${API_URL}
     volumes:
-      - ./apps/game:/app
-      - /app/server/node_modules
-    networks:
-      - app-net
-
-  game-client:
-    restart: unless-stopped
-    build:
-      context: ./apps/game
-      dockerfile: client/Dockerfile
-    ports:
-      - "5173:5173"
-    environment:
-      VITE_API_URL: ${API_URL}
-      VITE_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
-      VITE_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
-      NODE_ENV: development
-    depends_on:
-      - game-server
-    volumes:
-      - ./apps/game:/app
-      - /app/client/node_modules
+      - ./apps/game/server:/app/apps/game/server
+      - /app/apps/game/server/node_modules
+      - ./apps/game/shared-package:/app/apps/game/shared-package
+      - /app/apps/game/shared-package/node_modules
     networks:
       - app-net
 
