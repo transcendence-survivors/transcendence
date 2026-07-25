@@ -32,7 +32,9 @@ dev:
 	@echo "Starting DEV in background...z"
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
 	sleep 5
+	$(MAKE) dev-migrate-deploy
 	$(MAKE) dev-sync
+
 
 dev-sync:
 	@echo "Syncing node_modules for IDE..."
