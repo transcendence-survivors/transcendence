@@ -1,6 +1,7 @@
-FROM minio/minio:RELEASE.2025-09-07T16-13-09Z
+FROM quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z AS mc-stage
+FROM quay.io/minio/minio:RELEASE.2024-11-07T00-52-20Z
 
-COPY --from=minio/mc:RELEASE.2025-08-13T08-35-41Z-cpuv1 /usr/bin/mc /usr/bin/mc
+COPY --from=mc-stage /usr/bin/mc /usr/bin/mc
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
