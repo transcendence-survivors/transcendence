@@ -93,6 +93,13 @@ services:
     build:
       context: .
       dockerfile: apps/network/client/Dockerfile
+      args:
+        JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+        API_INTERNAL: ${API_INTERNAL}
+        NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+        NEXT_PUBLIC_API_URL: ${API_URL}
+        NEXT_PUBLIC_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+        NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
     ports:
       - "3000:3000"
     environment:

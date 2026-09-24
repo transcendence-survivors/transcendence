@@ -1,46 +1,152 @@
-version: "3.9"
-
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - client
-      - server
-      - game
-
   postgres:
+    restart: unless-stopped
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: app
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
 
-  server:
-    build: ./apps/server
+  minio:
+    restart: unless-stopped
+    build:
+      context: ./apps/network/minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+      MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
+      MINIO_BUCKET_POST: ${MINIO_BUCKET_POST}
+      MINIO_BUCKET_CHAT: ${MINIO_BUCKET_CHAT}
+
+      MINIO_SERVER_URL: ${MINIO_PUBLIC_ENDPOINT}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_CONSOLE_URL}
+    ports:
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  network-server:
+    restart: unless-stopped
+    build:
+      context: ./apps/network/server
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3001:3001"
+      - "5555:5555"
     environment:
       NODE_ENV: production
-      NEST_PORT: 3001
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/app
-      JWT_SECRET: prod_secret
+      DATABASE_URL: ${DATABASE_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      NEST_PORT: ${NEST_PORT}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRATION_S: ${JWT_ACCESS_TOKEN_EXPIRATION_S}
+      JWT_REFRESH_TOKEN_EXPIRATION_S: ${JWT_REFRESH_TOKEN_EXPIRATION_S}
+      RESET_PASSWORD_TOKEN_EXPIRATION_S: ${RESET_PASSWORD_TOKEN_EXPIRATION_S}
 
-  client:
-    build: ./apps/client
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
+      MINIO_BUCKET_POST: ${MINIO_BUCKET_POST}
+      MINIO_BUCKET_CHAT: ${MINIO_BUCKET_CHAT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  network-client:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/network/client/Dockerfile.prod
+      args:
+        JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+        API_INTERNAL: ${API_INTERNAL}
+        NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+        NEXT_PUBLIC_API_URL: ${API_URL}
+        NEXT_PUBLIC_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+        NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
+    ports:
+      - "3000:3000"
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: /api
+      NEXT_PUBLIC_API_URL: ${API_URL}
+      NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+      NEXT_PUBLIC_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+      NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
+      API_INTERNAL: ${API_INTERNAL}
+      JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+    depends_on:
+      - network-server
+      - game-server
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-net
 
-  game:
-    build: ./apps/game
+  game-server:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/game/server/Dockerfile
+    ports:
+      - "4000:4000"
     environment:
-      NODE_ENV: production
-      VITE_API_URL: /api
+      NODE_ENV: development
+      PORT: ${GAME_SERVER_PORT}
+      API_URL: ${API_URL}
+    volumes:
+      - ./apps/game/server:/app/apps/game/server
+      - /app/apps/game/server/node_modules
+      - ./apps/game/shared-package:/app/apps/game/shared-package
+      - /app/apps/game/shared-package/node_modules
+    networks:
+      - app-net
 
 volumes:
   postgres_data:
+  minio_data:
+
+networks:
+  app-net:
+    driver: bridge

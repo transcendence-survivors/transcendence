@@ -1,6 +1,7 @@
 DOCKER_MANAGER = docker compose
 
 DEV_COMPOSE = docker-compose.dev.yml
+# DEV_COMPOSE = docker-compose.prod.yml
 PROD_COMPOSE = docker-compose.prod.yml
 
 NETWORK_SERVER_CONTAINER = network-server
