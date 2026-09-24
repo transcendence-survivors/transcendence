@@ -70,6 +70,10 @@ dev-stop:
 	@echo "Stopping DEV environment..."
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
 
+dev-run:
+	@echo "Running DEV environment..."
+	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build
+
 dev-clean:
 	rm -rf $(LOCAL_ROOT_DIR)/node_modules
 

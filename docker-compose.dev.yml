@@ -51,7 +51,7 @@ services:
       context: ./apps/network/server
     ports:
       - "3001:3001"
-      - "51212:51212"
+      - "5555:5555"
     environment:
       NODE_ENV: development
       DATABASE_URL: ${DATABASE_URL}
