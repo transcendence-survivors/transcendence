@@ -15,4 +15,4 @@ RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["server", "/data", "--console-address", ":9001"]
+CMD ["server", "/data", "--console-address", "0.0.0.0:9001"]

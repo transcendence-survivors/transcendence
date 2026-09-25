@@ -1,0 +1,155 @@
+services:
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      network-client:
+        condition: service_healthy
+      network-server:
+        condition: service_started
+      game-server:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  minio:
+    build:
+      context: ./apps/network/minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BROWSER_REDIRECT_URL: "${FRONTEND_URL}/minio-console/"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/minio/health/live || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-net
+
+  network-server:
+    restart: always
+    build:
+      context: .
+      dockerfile: apps/network/server/Dockerfile.prod
+      target: production
+    command: >
+      sh -c "cd apps/network/server && ./node_modules/.bin/prisma migrate deploy && node dist/src/main.js"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      NEST_PORT: ${NEST_PORT}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRATION_S: ${JWT_ACCESS_TOKEN_EXPIRATION_S}
+      JWT_REFRESH_TOKEN_EXPIRATION_S: ${JWT_REFRESH_TOKEN_EXPIRATION_S}
+      RESET_PASSWORD_TOKEN_EXPIRATION_S: ${RESET_PASSWORD_TOKEN_EXPIRATION_S}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
+      MINIO_BUCKET_POST: ${MINIO_BUCKET_POST}
+      MINIO_BUCKET_CHAT: ${MINIO_BUCKET_CHAT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  network-client:
+    restart: always
+    build:
+      context: .
+      dockerfile: apps/network/client/Dockerfile.prod
+      target: runner
+      args:
+        NEXT_PUBLIC_API_URL: ${API_URL}
+        NEXT_PUBLIC_SOCKET_URL: ${CHAT_SOCKET_URL}
+        NEXT_PUBLIC_GAME_SOCKET_URL: ${GAME_SOCKET_URL}
+        NEXT_PUBLIC_CHAT_SOCKET_URL: ${CHAT_SOCKET_URL}
+        JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+        API_INTERNAL: ${API_INTERNAL}
+    environment:
+      NODE_ENV: production
+      API_INTERNAL: ${API_INTERNAL}
+      JWT_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+    depends_on:
+      - network-server
+      - game-server
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/favicon.ico || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-net
+
+  game-server:
+    restart: always
+    build:
+      context: .
+      dockerfile: apps/game/server/Dockerfile.prod
+      target: production
+    environment:
+      NODE_ENV: production
+      PORT: ${GAME_SERVER_PORT}
+      NETWORK_SERVER_INTERNAL_URL: http://network-server:3001
+      API_URL: ${API_URL}
+    depends_on:
+      - network-server
+    networks:
+      - app-net
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  app-net:
+    driver: bridge

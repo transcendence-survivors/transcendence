@@ -1,8 +1,8 @@
 DOCKER_MANAGER = docker compose
 
 DEV_COMPOSE = docker-compose.dev.yml
+PROD_COMPOSE = docker-compose.build.yml
 # DEV_COMPOSE = docker-compose.prod.yml
-PROD_COMPOSE = docker-compose.prod.yml
 
 NETWORK_SERVER_CONTAINER = network-server
 NETWORK_CLIENT_CONTAINER = network-client
@@ -27,7 +27,7 @@ DOCKER_GAME_UI = /app/apps/game/ui
 DOCKER_GAME_SHARED = /app/apps/game/shared-package
 DOCKER_GAME_SERVER = /app/apps/game/server
 
-all: dev
+all: prod
 
 dev:
 	@echo "Starting DEV in background...z"
@@ -35,7 +35,6 @@ dev:
 	sleep 5
 	$(MAKE) dev-migrate-deploy
 	$(MAKE) dev-sync
-
 
 dev-sync:
 	@echo "Syncing node_modules for IDE..."
@@ -101,7 +100,6 @@ dev-re: dev-fclean dev
 	dev-migrate-deploy dev-migrate \
 	dev-stop dev-clean dev-fclean dev-re
 
-
 prod:
 	@echo "Starting PROD environment with Docker..."
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build -d
@@ -109,6 +107,11 @@ prod:
 prod-stop:
 	@echo "Stopping PROD environment..."
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down
+
+prod-fclean:
+	@echo "Cleaning PROD environment (containers + volumes)..."
+	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
+	docker system prune -af --volumes
 
 rebuild-prod:
 	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
@@ -118,11 +121,12 @@ studio:
 
 .PHONY: prod prod-stop rebuild-prod studio
 
-clean:
-	@echo "Cleaning Docker system..."
-	docker system prune -f
+fclean: prod-fclean
+clean: prod-stop
 
-fclean: dev-fclean
+.PHONY: fclean clean
+
+
 
 logs-dev:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f
@@ -133,7 +137,10 @@ logs-prod:
 .PHONY: all clean fclean logs-dev logs-prod
 
 
-seed:
+dev-seed:
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm prisma db seed
 
-.PHONY: seed
+prod-seed:
+	docker compose -f $(PROD_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) sh -c "cd apps/network/server && node dist/prisma/seeds/index.js"
+
+.PHONY: dev-seed prod-seed
