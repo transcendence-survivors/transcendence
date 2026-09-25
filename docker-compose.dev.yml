@@ -77,6 +77,7 @@ services:
       MINIO_BUCKET_AVATARS: ${MINIO_BUCKET_AVATARS}
       MINIO_BUCKET_POST: ${MINIO_BUCKET_POST}
       MINIO_BUCKET_CHAT: ${MINIO_BUCKET_CHAT}
+      JWT_GAME_TOKEN_SECRET: ${JWT_GAME_TOKEN_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -137,7 +138,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: ${GAME_SERVER_PORT}
-      API_URL: ${API_URL}
+      API_INTERNAL: ${API_INTERNAL}
+      JWT_GAME_TOKEN_SECRET: ${JWT_GAME_TOKEN_SECRET}
     volumes:
       - ./apps/game/server:/app/apps/game/server
       - /app/apps/game/server/node_modules

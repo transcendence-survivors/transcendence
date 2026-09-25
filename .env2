@@ -1,0 +1,60 @@
+# =========================
+# POSTGRES
+# =========================
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=app
+POSTGRES_PORT=5432
+DATABASE_URL=postgresql://postgres:postgres@postgres:${POSTGRES_PORT}/app
+
+# =========================
+# SECRETS
+# =========================
+JWT_REFRESH_TOKEN_SECRET=your_refresh_token_secret
+JWT_ACCESS_TOKEN_SECRET=your_access_token_secret
+
+# seconds
+JWT_ACCESS_TOKEN_EXPIRATION_S=900000
+JWT_REFRESH_TOKEN_EXPIRATION_S=2592000000
+RESET_PASSWORD_TOKEN_EXPIRATION_S=900000
+
+
+# =========================
+# PORTS
+# =========================
+GAME_SERVER_PORT=4000
+NEST_PORT=3001
+CHAT_SOCKET_PORT=3001
+
+# =========================
+# URLS
+# =========================
+FRONTEND_URL=http://10.13.2.2:3000/
+API_INTERNAL=http://network-server:3001/api/v1
+API_URL=http://10.13.2.2:${NEST_PORT}/api/v1
+CHAT_SOCKET_URL=http://10.13.2.2:${CHAT_SOCKET_PORT}
+GAME_SOCKET_URL=http://10.13.2.2:${GAME_SERVER_PORT}
+
+# =========================
+# SMTP
+# =========================
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=username
+SMTP_PASS=password
+SMTP_FROM_NAME=My App
+SMTP_FROM_EMAIL=noreply@myapp.com
+
+# =========================
+# MINIO
+# =========================
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin
+MINIO_API_PORT=9000
+MINIO_CONSOLE_PORT=9001
+MINIO_ENDPOINT=http://minio:9000
+MINIO_PUBLIC_ENDPOINT=http://10.13.2.2:9000
+MINIO_CONSOLE_URL=http://10.13.2.2:9001
+MINIO_BUCKET_AVATARS=avatars
+MINIO_BUCKET_POST=post
+MINIO_BUCKET_CHAT=chat

@@ -18,7 +18,7 @@ LOCAL_NETWORK_SERVER_DIR = $(LOCAL_APP_DIR)/network/server
 LOCAL_GAME_UI_DIR = $(LOCAL_APP_DIR)/game/ui
 LOCAL_GAME_SHARED_DIR = $(LOCAL_APP_DIR)/game/shared-package
 LOCAL_GAME_SERVER_DIR = $(LOCAL_APP_DIR)/game/server
-GAME_SERVER_IMAGE = repo-game-server
+GAME_SERVER_IMAGE = transcendence-game-server
 
 DOCKER_ROOT = /app
 DOCKER_CLIENT = /app/apps/network/client
