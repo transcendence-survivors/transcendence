@@ -1,8 +1,7 @@
 DOCKER_MANAGER = docker compose
 
-DEV_COMPOSE = docker-compose.dev.yml
-PROD_COMPOSE = docker-compose.build.yml
-# DEV_COMPOSE = docker-compose.prod.yml
+DEV_COMPOSE = -f docker-compose.dev.yml --env-file .env.dev
+PROD_COMPOSE = -f docker-compose.build.yml --env-file .env.prod
 
 NETWORK_SERVER_CONTAINER = network-server
 NETWORK_CLIENT_CONTAINER = network-client
@@ -31,18 +30,18 @@ all: prod
 
 dev:
 	@echo "Starting DEV in background...z"
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up -d --build
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) up -d --build
 	sleep 5
 	$(MAKE) dev-migrate-deploy
 	$(MAKE) dev-sync
 
 dev-sync:
 	@echo "Syncing node_modules for IDE..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_ROOT_DIR)
-	@$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_CLIENT) node_modules | tar -xf - -C $(LOCAL_NETWORK_CLIENT_DIR)
-	@$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_UI) node_modules | tar -xf - -C $(LOCAL_GAME_UI_DIR)
-	@$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_SHARED) node_modules | tar -xf - -C $(LOCAL_GAME_SHARED_DIR)
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_NETWORK_SERVER_DIR)
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_ROOT_DIR)
+	@$(DOCKER_MANAGER) $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_CLIENT) node_modules | tar -xf - -C $(LOCAL_NETWORK_CLIENT_DIR)
+	@$(DOCKER_MANAGER) $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_UI) node_modules | tar -xf - -C $(LOCAL_GAME_UI_DIR)
+	@$(DOCKER_MANAGER) $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_SHARED) node_modules | tar -xf - -C $(LOCAL_GAME_SHARED_DIR)
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_NETWORK_SERVER_DIR)
 
 # 	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_ROOT) node_modules | tar -xf - -C $(LOCAL_ROOT_DIR)
 # 	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_GAME_SERVER) node_modules | tar -xf - -C $(LOCAL_GAME_SERVER_DIR)
@@ -53,8 +52,8 @@ M_NAME :=
 
 dev-migrate-deploy:
 	@echo "Deploying Prisma migrations (DEV)..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:deploy
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:deploy
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
 
 dev-migrate:
 	@if [ -z "$(M_NAME)" ]; then \
@@ -62,17 +61,17 @@ dev-migrate:
 		exit 1; \
 	fi
 	@echo "Running Prisma migrations (DEV)..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:create $(M_NAME)
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:create $(M_NAME)
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:generate
 	$(MAKE) dev-migrate-deploy
 
 dev-stop:
 	@echo "Stopping DEV environment..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) down
 
 dev-run:
 	@echo "Running DEV environment..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) up --build
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) up --build
 
 dev-clean:
 	rm -rf $(LOCAL_ROOT_DIR)/node_modules
@@ -91,7 +90,7 @@ dev-clean:
 
 dev-fclean: dev-clean
 	@echo "Cleaning DEV environment (containers + volumes)..."
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) down -v
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) down -v
 	docker system prune -af --volumes
 
 dev-re: dev-fclean dev
@@ -102,22 +101,22 @@ dev-re: dev-fclean dev
 
 prod:
 	@echo "Starting PROD environment with Docker..."
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build -d
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) up --build -d
 
 prod-stop:
 	@echo "Stopping PROD environment..."
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) down
 
 prod-fclean:
 	@echo "Cleaning PROD environment (containers + volumes)..."
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) down -v
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) down -v
 	docker system prune -af --volumes
 
 rebuild-prod:
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) up --build --force-recreate -d
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) up --build --force-recreate -d
 
 studio:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:studio
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm run migration:studio
 
 .PHONY: prod prod-stop rebuild-prod studio
 
@@ -129,18 +128,18 @@ clean: prod-stop
 
 
 logs-dev:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) logs -f
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) logs -f
 
 logs-prod:
-	$(DOCKER_MANAGER) -f $(PROD_COMPOSE) logs -f
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) logs -f
 
 .PHONY: all clean fclean logs-dev logs-prod
 
 
 dev-seed:
-	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm prisma db seed
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) pnpm prisma db seed
 
 prod-seed:
-	docker compose -f $(PROD_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) sh -c "cd apps/network/server && node dist/prisma/seeds/index.js"
+	$(DOCKER_MANAGER) $(PROD_COMPOSE) exec $(NETWORK_SERVER_CONTAINER) sh -c "cd apps/network/server && node dist/prisma/seeds/index.js"
 
 .PHONY: dev-seed prod-seed
