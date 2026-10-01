@@ -44,8 +44,8 @@ dev-sync:
 	@$(DOCKER_MANAGER) -f $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_SHARED) node_modules | tar -xf - -C $(LOCAL_GAME_SHARED_DIR)
 	$(DOCKER_MANAGER) -f $(DEV_COMPOSE) cp $(NETWORK_SERVER_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_NETWORK_SERVER_DIR)
 
-	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_ROOT) node_modules | tar -xf - -C $(LOCAL_ROOT_DIR)
-	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_GAME_SERVER) node_modules | tar -xf - -C $(LOCAL_GAME_SERVER_DIR)
+# 	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_ROOT) node_modules | tar -xf - -C $(LOCAL_ROOT_DIR)
+# 	@docker run --rm $(GAME_SERVER_IMAGE) tar -cf - -C $(DOCKER_GAME_SERVER) node_modules | tar -xf - -C $(LOCAL_GAME_SERVER_DIR)
 	@echo "Sync done."
 
 
