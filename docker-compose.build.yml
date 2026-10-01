@@ -3,7 +3,7 @@ services:
     image: nginx:alpine
     restart: always
     ports:
-      - "8090:80"
+      - "8080:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -142,6 +142,7 @@ services:
       PORT: ${GAME_SERVER_PORT}
       NETWORK_SERVER_INTERNAL_URL: http://network-server:3001
       API_URL: ${API_URL}
+      API_INTERNAL: ${API_INTERNAL}
       JWT_GAME_TOKEN_SECRET: ${JWT_GAME_TOKEN_SECRET}
     depends_on:
       - network-server
