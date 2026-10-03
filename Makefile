@@ -37,6 +37,7 @@ dev:
 
 dev-sync:
 	@echo "Syncing node_modules for IDE..."
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_ROOT)/pnpm-lock.yaml $(LOCAL_ROOT_DIR)
 	$(DOCKER_MANAGER) $(DEV_COMPOSE) cp $(NETWORK_CLIENT_CONTAINER):$(DOCKER_ROOT)/node_modules $(LOCAL_ROOT_DIR)
 	@$(DOCKER_MANAGER) $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_CLIENT) node_modules | tar -xf - -C $(LOCAL_NETWORK_CLIENT_DIR)
 	@$(DOCKER_MANAGER) $(DEV_COMPOSE) exec -T $(NETWORK_CLIENT_CONTAINER) tar -cf - -C $(DOCKER_GAME_UI) node_modules | tar -xf - -C $(LOCAL_GAME_UI_DIR)
@@ -87,9 +88,9 @@ dev-clean:
 	rm -rf $(LOCAL_GAME_UI_DIR)/node_modules
 	rm -rf $(LOCAL_GAME_SERVER_DIR)/node_modules
 	rm -rf $(LOCAL_GAME_SHARED_DIR)/node_modules
+	$(DOCKER_MANAGER) $(DEV_COMPOSE) down
 
 dev-fclean: dev-clean
-	@echo "Cleaning DEV environment (containers + volumes)..."
 	$(DOCKER_MANAGER) $(DEV_COMPOSE) down -v
 	docker system prune -af --volumes
 
