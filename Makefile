@@ -1,7 +1,7 @@
 DOCKER_MANAGER = docker compose
 
 DEV_COMPOSE = -f docker-compose.dev.yml --env-file .env.dev
-PROD_COMPOSE = -f docker-compose.build.yml --env-file .env.prod
+PROD_COMPOSE = -f docker-compose.prod.yml --env-file .env.prod
 
 NETWORK_SERVER_CONTAINER = network-server
 NETWORK_CLIENT_CONTAINER = network-client
