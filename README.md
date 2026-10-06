@@ -8,13 +8,13 @@ _This project has been created as part of the 42 curriculum by bcabocel, nofaniz
 
 The application has two halves:
 
-- **A social network**: sign-up and login, customizable profiles, a feed of posts (with images, replies, quotes, reposts and likes), friends and blocks, real-time presence, and a full chat (direct messages and group chats with roles, attachments and shared posts).
+- **A social network**: sign-up and login, customizable profiles, a feed of posts (with images, replies, quotes, reposts and likes), friends and moderation, real-time presence, and a full chat (direct messages and group chats with roles, attachments and shared posts).
 - **A cooperative 3D survival game**: up to 4 players fight endless waves of monsters together in a procedurally generated world. They level up, pick weapons and passive "tomes", revive each other and try to survive as long as possible. Every game is saved, so players get a game history, profile stats and a global leaderboard.
 
 ### Key features
 
 - 🔐 JWT authentication with refresh-token rotation, password reset by email
-- 👤 Profiles, friends, blocks, real-time online status
+- 👤 Profiles, friends, moderation, real-time online status
 - 📝 Feed with posts, images, replies, quotes, reposts and likes
 - 🔎 Search for users, posts, friends and conversations
 - 💬 Real-time chat: direct messages, group chats, roles, attachments, post sharing
@@ -29,14 +29,14 @@ The application has two halves:
 
 ### Prerequisites
 
-| Tool                                                       | Version               | Why                                                                                                                                                     |
-| ---------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Git](https://git-scm.com/)                                | any recent version    | Clone the repository and its submodules (SSH access to the [`transcendence-survivors`](https://github.com/transcendence-survivors) GitHub organization) |
-| [Docker Engine](https://docs.docker.com/engine/install/)   | ≥ 24                  | Runs every service                                                                                                                                      |
-| [Docker Compose](https://docs.docker.com/compose/install/) | v2 (`docker compose`) | Orchestrates the stack                                                                                                                                  |
-| [GNU Make](https://www.gnu.org/software/make/)             | any                   | Shortcut commands (`Makefile`)                                                                                                                          |
-| [OpenSSL](https://www.openssl.org/)                        | any                   | Generates the self-signed TLS certificate                                                                                                               |
-| A recent browser                                           | Chrome or Firefox     | WebGL 2 is required for the game                                                                                                                        |
+| Tool                                                       | Version               | Why                                                                                                                                   |
+| ---------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [Git](https://git-scm.com/)                                | any recent version    | Clone the repository and its submodules ([`transcendence-survivors`](https://github.com/transcendence-survivors) GitHub organization) |
+| [Docker Engine](https://docs.docker.com/engine/install/)   | ≥ 24                  | Runs every service                                                                                                                    |
+| [Docker Compose](https://docs.docker.com/compose/install/) | v2 (`docker compose`) | Orchestrates the stack                                                                                                                |
+| [GNU Make](https://www.gnu.org/software/make/)             | any                   | Shortcut commands (`Makefile`)                                                                                                        |
+| [OpenSSL](https://www.openssl.org/)                        | any                   | Generates the self-signed TLS certificate                                                                                             |
+| A recent browser                                           | Chrome or Firefox     | WebGL 2 is required for the game                                                                                                      |
 
 You do **not** need Node.js, pnpm or Bun on your machine: everything is built inside the containers (`node:20-alpine` and `oven/bun:1-alpine`).
 
@@ -67,11 +67,9 @@ cp .env.example .env.dev    # development stack (used by `make dev`)
 | SMTP            | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM_NAME`, `SMTP_FROM_EMAIL`                  | Needed for password-reset emails (any SMTP provider works).                                                                               |
 | MinIO           | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`, `MINIO_BUCKET_*`                                               | Object storage for uploaded files.                                                                                                        |
 
-> ⚠️ `.env*` files and certificates are git-ignored. Never commit real secrets.
-
 ### 3. Generate the TLS certificate
 
-Nginx serves the app over HTTPS only. Generate a self-signed certificate for `localhost` and for any IP the app will be reached from:
+Nginx serves the app over HTTPS only. Generate a self-signed certificate for any IP the app will be reached from:
 
 ```bash
 ./gen_certs.sh 127.0.0.1            # or: ./gen_certs.sh <your-LAN-ip>
@@ -85,13 +83,11 @@ This writes `certs/cert.pem` and `certs/key.pem`. Your browser will show a warni
 make            # build and start the production stack in the background
 ```
 
-Then open **<https://localhost:8443>**. Database migrations run automatically when the API starts.
+Then open **<https://{FRONTEND_URL}:8443>**. Database migrations run automatically when the API starts.
 
 | Command              | Description                                                                   |
 | -------------------- | ----------------------------------------------------------------------------- |
 | `make` / `make prod` | Build and start the production stack                                          |
-| `make prod-seed`     | Fill the database with fake users, friendships, chats… (Faker)                |
-| `make logs-prod`     | Follow the logs                                                               |
 | `make clean`         | Stop the stack                                                                |
 | `make fclean`        | Stop the stack and delete volumes (⚠️ database and uploads) and Docker images |
 | `make rebuild-prod`  | Force a full rebuild                                                          |
@@ -100,8 +96,6 @@ Then open **<https://localhost:8443>**. Database migrations run automatically wh
 
 ```bash
 make dev        # starts the stack with hot reload, applies migrations, syncs node_modules for your IDE
-make dev-seed   # optional: seed the database
-make studio     # Prisma Studio on http://localhost:5555
 make dev-migrate M_NAME=my_migration   # create and apply a new Prisma migration
 make dev-stop
 ```
@@ -118,7 +112,7 @@ In dev, each service is exposed on its own port: web app <http://localhost:3000>
 
 - [Next.js documentation](https://nextjs.org/docs) — [App Router](https://nextjs.org/docs/app), [Middleware / Proxy](https://nextjs.org/docs/app/api-reference/file-conventions/proxy)
 - [React documentation](https://react.dev/learn)
-- [Tailwind CSS](https://tailwindcss.com/docs) · [shadcn/ui](https://ui.shadcn.com/docs) · [Radix UI Primitives](https://www.radix-ui.com/primitives/docs/overview/introduction)
+- [Tailwind CSS](https://tailwindcss.com/docs) · [shadcn/ui](https://ui.shadcn.com/docs)
 - [TanStack Query — Infinite queries](https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries) · [Optimistic updates](https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates)
 - [Zustand](https://zustand.docs.pmnd.rs/) · [React Hook Form](https://react-hook-form.com/get-started) · [Zod](https://zod.dev/)
 - [next-intl](https://next-intl.dev/docs/getting-started) · [nuqs (URL state)](https://nuqs.dev/docs) · [next-themes](https://github.com/pacocoursey/next-themes)
@@ -143,9 +137,7 @@ In dev, each service is exposed on its own port: web app <http://localhost:3000>
 - [Bun documentation](https://bun.sh/docs)
 - [Gabriel Gambetta — Fast-Paced Multiplayer (client-side prediction, server reconciliation)](https://www.gabrielgambetta.com/client-server-game-architecture.html)
 - [Valve — Source Multiplayer Networking](https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking)
-- [Glenn Fiedler — Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/)
-- [Red Blob Games — Noise functions and map generation](https://www.redblobgames.com/maps/terrain-from-noise/)
-- [Matthias Müller — Position Based Dynamics](https://matthias-research.github.io/pages/publications/posBasedDyn.pdf)
+- [Babylon Online GUI Editor](https://gui.babylonjs.com/)
 
 **Infrastructure and security**
 
@@ -159,12 +151,7 @@ In dev, each service is exposed on its own port: web app <http://localhost:3000>
 
 <!-- TODO (team): complete this list with how each member actually used AI. -->
 
-AI assistants were used as a support tool, never as a replacement for understanding. Every piece of generated content was reviewed, tested and adapted by the team member responsible for it, and each member can explain all of their code.
-
-| Task          | Part of the project | Usage                                                                                                                                                                                                                                           |
-| ------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Documentation | `README.md`         | [Claude Code](https://claude.com/claude-code) helped draft the technical stack, database schema, features list and this file from the codebase (Prisma schema, `package.json` files, git history). The team reviewed and corrected the content. |
-| _to complete_ |                     |                                                                                                                                                                                                                                                 |
+AI assistants were used as a support tool, never as a replacement for understanding.
 
 ---
 
@@ -213,7 +200,7 @@ The project is a **pnpm monorepo** (`apps/*/*`) made of five Git submodules, all
 
 ### Database
 
-- **PostgreSQL 15** accessed through **Prisma 7** (`@prisma/adapter-pg`), with versioned migrations and seed scripts.
+- **PostgreSQL 15** accessed through **Prisma 7** (`@prisma/adapter-pg`), with versioned migrations.
 
 **Why PostgreSQL:** our data is highly relational (users ↔ friendships ↔ blocks, posts ↔ replies ↔ quotes ↔ likes, chat rooms ↔ members ↔ messages, games ↔ players ↔ weapons). PostgreSQL gives us foreign keys with cascading deletes, composite unique constraints (one like per user per post, one friendship per pair of users), transactions, enums and native array columns (`attachmentUrls String[]`). **Prisma** gives us a schema that is the single source of truth, generated TypeScript types and reproducible migrations.
 
@@ -222,7 +209,7 @@ The project is a **pnpm monorepo** (`apps/*/*`) made of five Git submodules, all
 - **Docker / Docker Compose**: one command (`make`) builds and starts the whole stack. There are separate `dev` (hot reload) and `prod` (multi-stage builds) compose files.
 - **Nginx**: the single HTTPS entry point (TLS 1.2/1.3, port `8443`). It redirects HTTP to HTTPS, sets security headers and reverse-proxies `/` → Next.js, `/api/` → NestJS, `/socket.io` → NestJS gateways, `/game-socket/` → game server, and `/avatars|post|chat/` → MinIO.
 - **MinIO**: S3-compatible object storage for avatars, cover images, post images and chat attachments (buckets `avatars`, `post`, `chat`).
-- **ESLint**, **Prettier**, **Vitest** (game packages), **Jest** (API).
+- **ESLint**, **Prettier**, **Vitest** (game packages in dev).
 
 ### Justification for major technical choices
 
@@ -237,34 +224,7 @@ The project is a **pnpm monorepo** (`apps/*/*`) made of five Git submodules, all
 
 ## Database Schema
 
-```mermaid
-erDiagram
-    User ||--o{ AuthProvider : "authenticates with"
-    User ||--o{ RefreshToken : owns
-    User ||--o{ ResetPasswordToken : owns
-    User ||--o{ Friendship : "userA / userB"
-    User ||--o{ Block : "blocker / blocked"
-    User ||--o{ Post : writes
-    User ||--o{ Like : gives
-    Post ||--o{ Like : receives
-    Post ||--o{ Post : "replies (parent)"
-    Post ||--o{ Post : "quotes"
-    User ||--o{ ChatRoom : creates
-    ChatRoom ||--o{ ChatMember : has
-    User ||--o{ ChatMember : "is member"
-    ChatRoom ||--o{ ChatMessage : contains
-    User ||--o{ ChatMessage : sends
-    ChatMessage ||--o| ChatMessageMetadata : has
-    ChatMessage ||--o{ ChatMessage : "replies to"
-    Post ||--o{ ChatMessage : "shared in"
-    GameStats ||--o{ GamePlayerStats : has
-    User ||--o{ GamePlayerStats : plays
-    GamePlayerStats ||--o{ GamePlayerWeaponStats : uses
-    GamePlayerStats ||--o{ GamePlayerTomeStats : uses
-    User ||--o| UserGameSummary : has
-    UserGameSummary ||--o{ UserGameWeaponSummary : aggregates
-    UserGameSummary ||--o{ UserGameTomeSummary : aggregates
-```
+<!-- TODO -->
 
 All primary keys are `UUID` strings (`String @id @default(uuid())`), except `RefreshToken.id` (auto-incremented `Int`). Timestamps are `DateTime`.
 
@@ -328,7 +288,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | Registration and login  | Multi-step sign-up form (identity, birth date, credentials) and login by email or username, with Zod/DTO validation on both sides.          | bcabocel, tlutz    |
 | JWT sessions            | Access and refresh tokens in HTTP-only cookies, silent refresh, refresh-token rotation with reuse detection, logout.                        | bcabocel, tlutz    |
-| Forgot / reset password | Sends a localized email with a single-use, time-limited link to set a new password.                                                         | bcabocel, nofanizz |
+| Forgot / reset password | Sends a localized email with a single-use, time-limited link to set a new password.                                                         | bcabocel           |
 | Route protection        | The Next.js proxy redirects unauthenticated users. API guards protect every private endpoint and socket connection.                         | bcabocel           |
 | Account settings        | Edit profile (display name, bio, location, website, avatar, cover), account data, security (password) and a danger zone (account deletion). | bcabocel, nofanizz |
 
@@ -376,19 +336,19 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 
 ### Game: Light Keepers (cooperative 3D survival)
 
-| Feature                      | Description                                                                                                                                                                                           | Member(s)                 |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| Real-time multiplayer        | Cooperative rooms for up to 4 players on an authoritative Colyseus server, with input validation and reconnection.                                                                                    | tlutz, abonneau           |
-| Lobby and game flow          | Main menu, lobby, waiting screen, in-game scene and ending screen, embedded in the web app. Access is authenticated with a game JWT.                                                                  | tlutz, abonneau           |
-| 3D world                     | Procedurally generated map (noise-based) rendered with Babylon.js, with animated GLB models for players and monsters.                                                                                 | abonneau, tlutz           |
-| Monsters and AI              | Monster catalog, wave spawning with scaling difficulty, server-side AI and collision solving.                                                                                                         | abonneau, tlutz           |
-| Combat and weapons           | Five weapons (aura, staff, bow, sword, axe) with automatic targeting, projectiles, hitboxes and damage resolution.                                                                                    | abonneau, abonneau, tlutz |
-| Progression                  | XP and level-ups with a random choice of upgrades: new or improved weapons and eleven passive "tomes" (damage, cooldown, agility, vitality, armor, lifesteal, range, size, duration, quantity, luck). | tlutz, abonneau           |
-| Downed and revive            | A player at 0 HP is downed and can be revived by teammates.                                                                                                                                           | abonneau                  |
-| HUD and controls             | Health and XP bars, timer, kill counter, level-up menu, revive prompt, rebindable keys, mobile touch controls, music and settings menu.                                                               | tlutz, abonneau           |
-| Game statistics              | At the end of a game, the game server sends signed stats to the API, which stores per-game and per-player data and updates the user summaries.                                                        | tlutz, bcabocel           |
-| Game history and leaderboard | Per-user history of past games with details, a stats summary on the profile, and a global leaderboard sortable by kills or survival time.                                                             | bcabocel                  |
-| Wiki                         | Public pages that present the lore, the arsenal (weapons) and the bestiary (monsters).                                                                                                                | nofanizz, bcabocel        |
+| Feature                      | Description                                                                                                                                                                                           | Member(s)          |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Real-time multiplayer        | Cooperative rooms for up to 4 players on an authoritative Colyseus server, with input validation and reconnection.                                                                                    | tlutz, abonneau    |
+| Lobby and game flow          | Main menu, lobby, waiting screen, in-game scene and ending screen, embedded in the web app. Access is authenticated with a game JWT.                                                                  | tlutz              |
+| 3D world                     | Procedurally generated map (noise-based) rendered with Babylon.js, with animated GLB models for players and monsters.                                                                                 | abonneau           |
+| Monsters and AI              | Monster catalog, wave spawning with scaling difficulty, server-side AI and collision solving.                                                                                                         | abonneau           |
+| Combat and weapons           | Five weapons (aura, staff, bow, sword, axe) with automatic targeting, projectiles, hitboxes and damage resolution.                                                                                    | abonneau           |
+| Progression                  | XP and level-ups with a random choice of upgrades: new or improved weapons and eleven passive "tomes" (damage, cooldown, agility, vitality, armor, lifesteal, range, size, duration, quantity, luck). | tlutz, abonneau    |
+| Downed and revive            | A player at 0 HP is downed and can be revived by teammates.                                                                                                                                           | abonneau           |
+| HUD and controls             | Health and XP bars, timer, kill counter, level-up menu, revive prompt, rebindable keys, mobile touch controls, music and settings menu.                                                               | tlutz, abonneau    |
+| Game statistics              | At the end of a game, the game server sends signed stats to the API, which stores per-game and per-player data and updates the user summaries.                                                        | tlutz, bcabocel    |
+| Game history and leaderboard | Per-user history of past games with details, a stats summary on the profile, and a global leaderboard sortable by kills or survival time.                                                             | bcabocel           |
+| Wiki                         | Public pages that present the lore, the arsenal (weapons) and the bestiary (monsters).                                                                                                                | nofanizz, bcabocel |
 
 ### Cross-cutting
 
@@ -396,12 +356,12 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
 | Internationalization    | Full UI translation in 6 languages (EN, FR, DE, ES, IT, Swiss German) with a language switcher, a persisted user preference and localized dates. The game UI is also translated. | bcabocel, nofanizz, abonneau |
 | Themes                  | Light and dark themes.                                                                                                                                                           | bcabocel                     |
-| Responsive UI           | Layouts adapted to desktop and mobile.                                                                                                                                           | bcabocel, nofanizz           |
+| Responsive UI           | Layouts adapted to desktop and mobile.                                                                                                                                           | bcabocel, nofanizz, tlutz    |
 | File storage            | Avatar, cover, post and chat uploads to MinIO with MIME validation and presigned URLs.                                                                                           | bcabocel, nofanizz           |
 | Security                | HTTPS through Nginx, Helmet headers, CORS, rate limiting, bcrypt hashing, validation of every input (DTOs and Zod).                                                              | bcabocel, nofanizz           |
 | API documentation       | Swagger UI generated from the controllers and DTOs, served by the API at `/docs`.                                                                                                | bcabocel                     |
 | Landing and legal pages | Landing page, privacy policy, terms of service and support pages.                                                                                                                | nofanizz, bcabocel, abonneau |
-| DevOps                  | Docker Compose dev and prod stacks, Makefile, Nginx reverse proxy, TLS certificate generation script, seeds.                                                                     | bcabocel, nofanizz           |
+| DevOps                  | Docker Compose dev and prod stacks, Makefile, Nginx reverse proxy, TLS certificate generation script.                                                                            | all                          |
 
 ---
 
@@ -620,8 +580,8 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 #### 18. Major — Complete web-based game
 
 - **Why:** the game is the heart of the project, and we wanted something more original than Pong.
-- **How:** **Light Keepers** is a cooperative survival game. Players fight endless waves of monsters with automatic weapons.
-  - **Rules:** gain XP by killing monsters, level up, choose upgrades. A downed player can be revived by teammates.
+- **How:** **Light Keepers** is a 3d survival game. Players fight endless waves of monsters with automatic weapons. Compete with your friends to become the most powerful being in the universe.
+  - **Rules:** gain XP by killing monsters, level up, choose upgrades. A downed player can be revived by other players.
   - **Win and loss:** the game is lost when every player is down. The score is the survival time and the number of kills.
   - It is played live in the browser from `/game/play`.
 - **Who:** tlutz, abonneau.
@@ -633,7 +593,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - The [Colyseus](https://docs.colyseus.io/) server is authoritative: clients only send inputs, which are validated by `InputValidator`.
   - The state is synchronized as binary deltas.
   - Network input cadence is tuned to limit latency.
-  - A disconnected player has a reconnection window (`allowReconnection`) before being removed.
+  - A disconnected player has a reconnection window of `40s` before being removed.
 - **Who:** tlutz, abonneau.
 
 #### 20. Major — Multiplayer game (more than two players)
