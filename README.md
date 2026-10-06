@@ -155,6 +155,51 @@ AI assistants were used as a support tool, never as a replacement for understand
 
 ---
 
+## Team Information
+
+- Product Owner (PO): Defines the product vision, prioritizes features, and en-
+  sures the project meets user needs.
+  ◦ Maintains the product backlog.
+  ◦ Makes decisions on features and priorities.
+  ◦ Validates completed work.
+  ◦ Communicates with stakeholders (evaluators, peers).
+
+  tlutz(game) & bcabocel(network)
+
+- Project Manager (PM) / Scrum Master: Facilitates team coordination and
+  removes obstacles.
+  ◦ Organizes team meetings and planning sessions.
+  ◦ Tracks progress and deadlines.
+  ◦ Ensures team communication.
+  ◦ Manages risks and blockers.
+
+  nofanizz(network)
+
+- Technical Lead / Architect: Oversees technical decisions and architecture.
+  ◦ Defines technical architecture.
+  ◦ Makes technology stack decisions.
+  ◦ Ensures code quality and best practices.
+  ◦ Reviews critical code changes.
+
+  bcabocel(network) & tlutz(game)
+
+- Developers (all team members): Implement features and modules.
+  ◦ Write code for assigned features.
+  ◦ Participate in code reviews.
+  ◦ Test their implementations.
+  ◦ Document their work.
+
+  tlutz & abonneau(game) | bcabocel & nofanizz(network)
+
+## Project Management
+
+- Meetings: weekly
+- Task Distribution: in each halves of the project (network and game), the tasks and features were assigned equally based on the motivation and knowledge of each member.
+
+- Tools used: Figma, Babylon GUI editor, Github (submodules and organization)
+
+- Communication channels used: Discord
+
 ## Technical Stack
 
 The project is a **pnpm monorepo** (`apps/*/*`) made of five Git submodules, all written in **TypeScript**:
