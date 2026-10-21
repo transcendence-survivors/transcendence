@@ -23,8 +23,6 @@ The application has two halves:
 - 🌍 6 languages, light and dark themes, responsive layout
 - 🐳 Fully dockerized, HTTPS through Nginx
 
----
-
 ## Instructions
 
 ### Prerequisites
@@ -149,54 +147,84 @@ In dev, each service is exposed on its own port: web app <http://localhost:3000>
 
 ### How AI was used
 
-<!-- TODO (team): complete this list with how each member actually used AI. -->
-
 AI assistants were used as a support tool, never as a replacement for understanding.
 
----
+- **tlutz**: LLMS were used for some research and some questions about general organization and good practices in web development (particularly for babylonjs and colyseus).
+
+- **abonneau**: Agentic AI was used for some debugging and code generation.
+
+- **bcabocel**: LLMS were used mainly for repetitive tasks but also research purposes and good backend practices.
+
+- **nofanizz**: LLMS and Agentic AI were used for debugging, research and general reasoning.
+
+LLMS were also used to help writing this README.
 
 ## Team Information
 
-- Product Owner (PO): Defines the product vision, prioritizes features, and en-
-  sures the project meets user needs.
+This project is split in two major parts: the network and the game, two members were assigned to each part:
+
+- network: **bcabocel** and **nofanizz**
+- game: **abonneau** and **tlutz**
+
+### Role Distribution
+
+- Product Owner (PO): Defines the product vision, prioritizes features, and ensures the project meets user needs: **tlutz**(game) & **bcabocel**(network).
+
   ◦ Maintains the product backlog.
+
   ◦ Makes decisions on features and priorities.
+
   ◦ Validates completed work.
+
   ◦ Communicates with stakeholders (evaluators, peers).
 
-  tlutz(game) & bcabocel(network)
-
 - Project Manager (PM) / Scrum Master: Facilitates team coordination and
-  removes obstacles.
+  removes obstacles: **nofanizz**(network).
+
   ◦ Organizes team meetings and planning sessions.
+
   ◦ Tracks progress and deadlines.
+
   ◦ Ensures team communication.
+
   ◦ Manages risks and blockers.
 
-  nofanizz(network)
+- Technical Lead / Architect: Oversees technical decisions and architecture: **bcabocel**(network) & **tlutz**(game).
 
-- Technical Lead / Architect: Oversees technical decisions and architecture.
   ◦ Defines technical architecture.
+
   ◦ Makes technology stack decisions.
+
   ◦ Ensures code quality and best practices.
+
   ◦ Reviews critical code changes.
 
-  bcabocel(network) & tlutz(game)
-
 - Developers (all team members): Implement features and modules.
+
   ◦ Write code for assigned features.
+
   ◦ Participate in code reviews.
+
   ◦ Test their implementations.
+
   ◦ Document their work.
 
-  tlutz & abonneau(game) | bcabocel & nofanizz(network)
+### Responsibilities
+
+**tlutz** was responsible for the main architecture of the game, the server-authoritative logic, the players movements, the multiplayer sync, the stats uploads and all the UI and scenes system.
+
+**abonneau** was responsible for the rendering side of the game, the weapons, the ennemies, the level up and upgrade system and the map generation.
+
+**nofanizz** was reponsible for the posts system and the search system.
+
+**bcabocel** was reponsible for the tech stack choices (after a meeting with the team), global architecture, websocket features, chat and relationships systems, auth, user settings, themes and languages setup.
 
 ## Project Management
 
 - Meetings: weekly
 - Task Distribution: in each halves of the project (network and game), the tasks and features were assigned equally based on the motivation and knowledge of each member.
 
-- Tools used: Figma, Babylon GUI editor, Github (submodules and organization)
+- Tools used: Figma, Github (submodules and organization)
 
 - Communication channels used: Discord
 
@@ -269,7 +297,7 @@ The project is a **pnpm monorepo** (`apps/*/*`) made of five Git submodules, all
 
 ## Database Schema
 
-<!-- TODO -->
+![DB schema](image.png "Title")
 
 All primary keys are `UUID` strings (`String @id @default(uuid())`), except `RefreshToken.id` (auto-incremented `Int`). Timestamps are `DateTime`.
 
@@ -325,88 +353,88 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 
 ## Features List
 
-> Team members: **bcabocel** (Benoit Cabocel), **nofanizz** (Noa Fanizzi), **tlutz** (Thyanoui Lutz), **abonneau** (Antoine Bonneau).
+> Team members: \***\*bcabocel\*\*** (Benoit Cabocel), \***\*nofanizz\*\*** (Noa Fanizzi), \***\*tlutz\*\*** (Thyanoui Lutz), \***\*abonneau\*\*** (Antoine Bonneau).
 
 ### Authentication and account
 
-| Feature                 | Description                                                                                                                                 | Member(s)          |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Registration and login  | Multi-step sign-up form (identity, birth date, credentials) and login by email or username, with Zod/DTO validation on both sides.          | bcabocel, tlutz    |
-| JWT sessions            | Access and refresh tokens in HTTP-only cookies, silent refresh, refresh-token rotation with reuse detection, logout.                        | bcabocel, tlutz    |
-| Forgot / reset password | Sends a localized email with a single-use, time-limited link to set a new password.                                                         | bcabocel           |
-| Route protection        | The Next.js proxy redirects unauthenticated users. API guards protect every private endpoint and socket connection.                         | bcabocel           |
-| Account settings        | Edit profile (display name, bio, location, website, avatar, cover), account data, security (password) and a danger zone (account deletion). | bcabocel, nofanizz |
+| Feature                 | Description                                                                                                                                 | Member(s)                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Registration and login  | Multi-step sign-up form (identity, birth date, credentials) and login by email or username, with Zod/DTO validation on both sides.          | **bcabocel**, **tlutz**    |
+| JWT sessions            | Access and refresh tokens in HTTP-only cookies, silent refresh, refresh-token rotation with reuse detection, logout.                        | **bcabocel**, **tlutz**    |
+| Forgot / reset password | Sends a localized email with a single-use, time-limited link to set a new password.                                                         | **bcabocel**               |
+| Route protection        | The Next.js proxy redirects unauthenticated users. API guards protect every private endpoint and socket connection.                         | **bcabocel**               |
+| Account settings        | Edit profile (display name, bio, location, website, avatar, cover), account data, security (password) and a danger zone (account deletion). | **bcabocel**, **nofanizz** |
 
 ### User profiles and social graph
 
-| Feature         | Description                                                                                                                | Member(s)          |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Public profiles | `/[username]` page with avatar, cover, bio, and tabs for posts, comments, likes, reposts and game history.                 | bcabocel, nofanizz |
-| Friends         | Send, accept, decline or cancel friend requests, list friends and pending requests, remove friends.                        | bcabocel           |
-| Block           | Block or unblock users. Blocked users cannot interact with you, and a dedicated page lists them.                           | bcabocel           |
-| Presence        | Real-time online / offline / do-not-disturb / invisible status for friends, based on Socket.IO and last-activity tracking. | bcabocel           |
+| Feature         | Description                                                                                                                | Member(s)                  |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Public profiles | `/[username]` page with avatar, cover, bio, and tabs for posts, comments, likes, reposts and game history.                 | **bcabocel**, **nofanizz** |
+| Friends         | Send, accept, decline or cancel friend requests, list friends and pending requests, remove friends.                        | **bcabocel**               |
+| Block           | Block or unblock users. Blocked users cannot interact with you, and a dedicated page lists them.                           | **bcabocel**               |
+| Presence        | Real-time online / offline / do-not-disturb / invisible status for friends, based on Socket.IO and last-activity tracking. | **bcabocel**               |
 
 ### Search
 
-| Feature                    | Description                                                                                                                                                                                                                      | Member(s)          |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Search page                | `/search` page with a **Users** tab and a **Posts** tab. The query and the active tab live in the URL (`?search=…&tab=…`), so a search can be shared, bookmarked and restored with the back button. Input is debounced (500 ms). | bcabocel           |
-| User search                | Case-insensitive match on username or display name. Prefix with `@` to search usernames only. Users who blocked you are excluded. Results load with infinite scroll.                                                             | bcabocel, nofanizz |
-| Post search                | Case-insensitive search in post content, with blocked authors excluded and the same post cards as the feed.                                                                                                                      | nofanizz, bcabocel |
-| Friends and blocked search | Search bar on the friends, friend-requests and blocked-users pages to filter each list. The "add a friend" panel searches only among users who are not already friends.                                                          | bcabocel           |
-| Chat search                | Filter conversations by group name or member display name. Search members inside a room. Pick users through a search when creating a group or adding members.                                                                    | bcabocel           |
-| Message search (API)       | The API can search messages in a room by content, or by sender with `@username text`. The UI does not expose it yet.                                                                                                             | bcabocel           |
-| Search protection          | Every `search` parameter is validated (string, 100 characters max). Search endpoints have their own rate limit (20 requests/s, 100/min, 10,000/day).                                                                             | bcabocel           |
+| Feature                    | Description                                                                                                                                                                                                                      | Member(s)                  |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Search page                | `/search` page with a **Users** tab and a **Posts** tab. The query and the active tab live in the URL (`?search=…&tab=…`), so a search can be shared, bookmarked and restored with the back button. Input is debounced (500 ms). | **bcabocel**               |
+| User search                | Case-insensitive match on username or display name. Prefix with `@` to search usernames only. Users who blocked you are excluded. Results load with infinite scroll.                                                             | **bcabocel**, **nofanizz** |
+| Post search                | Case-insensitive search in post content, with blocked authors excluded and the same post cards as the feed.                                                                                                                      | **nofanizz**, **bcabocel** |
+| Friends and blocked search | Search bar on the friends, friend-requests and blocked-users pages to filter each list. The "add a friend" panel searches only among users who are not already friends.                                                          | **bcabocel**               |
+| Chat search                | Filter conversations by group name or member display name. Search members inside a room. Pick users through a search when creating a group or adding members.                                                                    | **bcabocel**               |
+| Message search (API)       | The API can search messages in a room by content, or by sender with `@username text`. The UI does not expose it yet.                                                                                                             | **bcabocel**               |
+| Search protection          | Every `search` parameter is validated (string, 100 characters max). Search endpoints have their own rate limit (20 requests/s, 100/min, 10,000/day).                                                                             | **bcabocel**               |
 
 ### Posts and feed
 
-| Feature               | Description                                                                   | Member(s)          |
-| --------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Feed                  | Infinite-scrolling timeline of posts.                                         | nofanizz, bcabocel |
-| Create / delete posts | Text posts with an optional image (uploaded to MinIO).                        | nofanizz, bcabocel |
-| Replies (comments)    | Threaded replies on a dedicated post page.                                    | nofanizz           |
-| Likes                 | Like or unlike posts with optimistic UI updates, and a likes tab on profiles. | nofanizz           |
-| Reposts and quotes    | Repost a post or quote it with your own comment.                              | nofanizz           |
-| Share a post in chat  | Send a post to a conversation as a rich preview.                              | bcabocel           |
+| Feature               | Description                                                                   | Member(s)                  |
+| --------------------- | ----------------------------------------------------------------------------- | -------------------------- |
+| Feed                  | Infinite-scrolling timeline of posts.                                         | **nofanizz**, **bcabocel** |
+| Create / delete posts | Text posts with an optional image (uploaded to MinIO).                        | **nofanizz**, **bcabocel** |
+| Replies (comments)    | Threaded replies on a dedicated post page.                                    | **nofanizz**               |
+| Likes                 | Like or unlike posts with optimistic UI updates, and a likes tab on profiles. | **nofanizz**               |
+| Reposts and quotes    | Repost a post or quote it with your own comment.                              | **nofanizz**               |
+| Share a post in chat  | Send a post to a conversation as a rich preview.                              | **bcabocel**               |
 
 ### Chat
 
-| Feature                  | Description                                                                                                      | Member(s) |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------- | --------- |
-| Direct messages          | Real-time one-to-one conversations over Socket.IO.                                                               | bcabocel  |
-| Group chats              | Create groups, rename them, change the avatar, invite or kick members, leave.                                    | bcabocel  |
-| Roles and moderation     | Owner, admin and member roles, promotion and demotion, ownership transfer. Each action creates a system message. | bcabocel  |
-| Rich messages            | Replies to messages, edit and delete, emoji picker, file and image attachments.                                  | bcabocel  |
-| Unread and notifications | Unread counters based on `lastReadAt`, mute per room, rooms sorted by last activity.                             | bcabocel  |
+| Feature                  | Description                                                                                                      | Member(s)    |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------ |
+| Direct messages          | Real-time one-to-one conversations over Socket.IO.                                                               | **bcabocel** |
+| Group chats              | Create groups, rename them, change the avatar, invite or kick members, leave.                                    | **bcabocel** |
+| Roles and moderation     | Owner, admin and member roles, promotion and demotion, ownership transfer. Each action creates a system message. | **bcabocel** |
+| Rich messages            | Replies to messages, edit and delete, emoji picker, file and image attachments.                                  | **bcabocel** |
+| Unread and notifications | Unread counters based on `lastReadAt`, mute per room, rooms sorted by last activity.                             | **bcabocel** |
 
 ### Game: Light Keepers (cooperative 3D survival)
 
-| Feature                      | Description                                                                                                                                                                                           | Member(s)          |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Real-time multiplayer        | Cooperative rooms for up to 4 players on an authoritative Colyseus server, with input validation and reconnection.                                                                                    | tlutz, abonneau    |
-| Lobby and game flow          | Main menu, lobby, waiting screen, in-game scene and ending screen, embedded in the web app. Access is authenticated with a game JWT.                                                                  | tlutz              |
-| 3D world                     | Procedurally generated map (noise-based) rendered with Babylon.js, with animated GLB models for players and monsters.                                                                                 | abonneau           |
-| Monsters and AI              | Monster catalog, wave spawning with scaling difficulty, server-side AI and collision solving.                                                                                                         | abonneau           |
-| Combat and weapons           | Five weapons (aura, staff, bow, sword, axe) with automatic targeting, projectiles, hitboxes and damage resolution.                                                                                    | abonneau           |
-| Progression                  | XP and level-ups with a random choice of upgrades: new or improved weapons and eleven passive "tomes" (damage, cooldown, agility, vitality, armor, lifesteal, range, size, duration, quantity, luck). | tlutz, abonneau    |
-| Downed and revive            | A player at 0 HP is downed and can be revived by teammates.                                                                                                                                           | abonneau           |
-| HUD and controls             | Health and XP bars, timer, kill counter, level-up menu, revive prompt, rebindable keys, mobile touch controls, music and settings menu.                                                               | tlutz, abonneau    |
-| Game statistics              | At the end of a game, the game server sends signed stats to the API, which stores per-game and per-player data and updates the user summaries.                                                        | tlutz, bcabocel    |
-| Game history and leaderboard | Per-user history of past games with details, a stats summary on the profile, and a global leaderboard sortable by kills or survival time.                                                             | bcabocel           |
-| Wiki                         | Public pages that present the lore, the arsenal (weapons) and the bestiary (monsters).                                                                                                                | nofanizz, bcabocel |
+| Feature                      | Description                                                                                                                                                                                           | Member(s)                  |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Real-time multiplayer        | Cooperative rooms for up to 4 players on an authoritative Colyseus server, with input validation and reconnection.                                                                                    | **tlutz**, **abonneau**    |
+| Lobby and game flow          | Main menu, lobby, waiting screen, in-game scene and ending screen, embedded in the web app. Access is authenticated with a game JWT.                                                                  | **tlutz**                  |
+| 3D world                     | Procedurally generated map (noise-based) rendered with Babylon.js, with animated GLB models for players and monsters.                                                                                 | **abonneau**               |
+| Monsters and AI              | Monster catalog, wave spawning with scaling difficulty, server-side AI and collision solving.                                                                                                         | **abonneau**               |
+| Combat and weapons           | Five weapons (aura, staff, bow, sword, axe) with automatic targeting, projectiles, hitboxes and damage resolution.                                                                                    | **abonneau**               |
+| Progression                  | XP and level-ups with a random choice of upgrades: new or improved weapons and eleven passive "tomes" (damage, cooldown, agility, vitality, armor, lifesteal, range, size, duration, quantity, luck). | **tlutz**, **abonneau**    |
+| Downed and revive            | A player at 0 HP is downed and can be revived by teammates.                                                                                                                                           | **abonneau**               |
+| HUD and controls             | Health and XP bars, timer, kill counter, level-up menu, revive prompt, rebindable keys, mobile touch controls, music and settings menu.                                                               | **tlutz**, **abonneau**    |
+| Game statistics              | At the end of a game, the game server sends signed stats to the API, which stores per-game and per-player data and updates the user summaries.                                                        | **tlutz**, **bcabocel**    |
+| Game history and leaderboard | Per-user history of past games with details, a stats summary on the profile, and a global leaderboard sortable by kills or survival time.                                                             | **bcabocel**               |
+| Wiki                         | Public pages that present the lore, the arsenal (weapons) and the bestiary (monsters).                                                                                                                | **nofanizz**, **bcabocel** |
 
 ### Cross-cutting
 
-| Feature                 | Description                                                                                                                                                                      | Member(s)                    |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| Internationalization    | Full UI translation in 6 languages (EN, FR, DE, ES, IT, Swiss German) with a language switcher, a persisted user preference and localized dates. The game UI is also translated. | bcabocel, nofanizz, abonneau |
-| Themes                  | Light and dark themes.                                                                                                                                                           | bcabocel                     |
-| Responsive UI           | Layouts adapted to desktop and mobile.                                                                                                                                           | bcabocel, nofanizz, tlutz    |
-| File storage            | Avatar, cover, post and chat uploads to MinIO with MIME validation and presigned URLs.                                                                                           | bcabocel, nofanizz           |
-| Security                | HTTPS through Nginx, Helmet headers, CORS, rate limiting, bcrypt hashing, validation of every input (DTOs and Zod).                                                              | bcabocel, nofanizz           |
-| API documentation       | Swagger UI generated from the controllers and DTOs, served by the API at `/docs`.                                                                                                | bcabocel                     |
-| Landing and legal pages | Landing page, privacy policy, terms of service and support pages.                                                                                                                | nofanizz, bcabocel, abonneau |
-| DevOps                  | Docker Compose dev and prod stacks, Makefile, Nginx reverse proxy, TLS certificate generation script.                                                                            | all                          |
+| Feature                 | Description                                                                                                                                                                      | Member(s)                                |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Internationalization    | Full UI translation in 6 languages (EN, FR, DE, ES, IT, Swiss German) with a language switcher, a persisted user preference and localized dates. The game UI is also translated. | **bcabocel**, **nofanizz**, **abonneau** |
+| Themes                  | Light and dark themes.                                                                                                                                                           | **bcabocel**                             |
+| Responsive UI           | Layouts adapted to desktop and mobile.                                                                                                                                           | **bcabocel**, **nofanizz**, **tlutz**    |
+| File storage            | Avatar, cover, post and chat uploads to MinIO with MIME validation and presigned URLs.                                                                                           | **bcabocel**, **nofanizz**               |
+| Security                | HTTPS through Nginx, Helmet headers, CORS, rate limiting, bcrypt hashing, validation of every input (DTOs and Zod).                                                              | **bcabocel**, **nofanizz**               |
+| API documentation       | Swagger UI generated from the controllers and DTOs, served by the API at `/docs`.                                                                                                | **bcabocel**                             |
+| Landing and legal pages | Landing page, privacy policy, terms of service and support pages.                                                                                                                | **nofanizz**, **bcabocel**, **abonneau** |
+| DevOps                  | Docker Compose dev and prod stacks, Makefile, Nginx reverse proxy, TLS certificate generation script.                                                                            | all                                      |
 
 ---
 
@@ -414,31 +442,31 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 
 ### Summary and point calculation
 
-| #   | Category             | Module                                             | Type  | Points | Member(s)                 |
-| --- | -------------------- | -------------------------------------------------- | ----- | ------ | ------------------------- |
-| 1   | Web                  | Use a frontend framework (Next.js / React)         | Minor | 1      | bcabocel, nofanizz        |
-| 2   | Web                  | Use a backend framework (NestJS)                   | Minor | 1      | bcabocel, nofanizz, tlutz |
-| 3   | Web                  | Real-time features with WebSockets                 | Major | 2      | bcabocel, tlutz, abonneau |
-| 4   | Web                  | Allow users to interact with other users           | Major | 2      | bcabocel, nofanizz        |
-| 5   | Web                  | Public API (API key, rate limiting, documentation) | Major | 2      | bcabocel, nofanizz        |
-| 6   | Web                  | Use an ORM for the database (Prisma)               | Minor | 1      | bcabocel, nofanizz, tlutz |
-| 7   | Web                  | Complete notification system                       | Minor | 1      | bcabocel                  |
-| 8   | Web                  | Server-Side Rendering (SSR)                        | Minor | 1      | bcabocel, nofanizz        |
-| 9   | Web                  | Custom-made design system                          | Minor | 1      | bcabocel, nofanizz        |
-| 10  | Web                  | Advanced search (filters, sorting, pagination)     | Minor | 1      | bcabocel, nofanizz        |
-| 11  | Web                  | File upload and management system                  | Minor | 1      | bcabocel, nofanizz        |
-| 12  | Accessibility & i18n | Accessibility compliance (WCAG 2.1 AA)             | Major | 2      | all                       |
-| 13  | Accessibility & i18n | Support for multiple languages                     | Minor | 1      | all                       |
-| 14  | Accessibility & i18n | Support for additional browsers                    | Minor | 1      | all                       |
-| 15  | User management      | Standard user management and authentication        | Major | 2      | bcabocel, nofanizz, tlutz |
-| 16  | User management      | Game statistics and match history                  | Minor | 1      | bcabocel, tlutz           |
-| 17  | User management      | Organization system (group chats)                  | Major | 2      | bcabocel                  |
-| 18  | Gaming & UX          | Complete web-based game                            | Major | 2      | tlutz, abonneau           |
-| 19  | Gaming & UX          | Remote players                                     | Major | 2      | tlutz, abonneau           |
-| 20  | Gaming & UX          | Multiplayer game (more than two players)           | Major | 2      | tlutz, abonneau           |
-| 21  | Gaming & UX          | Advanced 3D graphics (Babylon.js)                  | Major | 2      | abonneau, tlutz           |
-| 22  | Gaming & UX          | Game customization options                         | Minor | 1      | tlutz, abonneau           |
-| 23  | Data & Analytics     | GDPR compliance features                           | Minor | 1      | bcabocel, abonneau        |
+| #   | Category             | Module                                             | Type  | Points | Member(s)                             |
+| --- | -------------------- | -------------------------------------------------- | ----- | ------ | ------------------------------------- |
+| 1   | Web                  | Use a frontend framework (Next.js / React)         | Minor | 1      | **bcabocel**, **nofanizz**            |
+| 2   | Web                  | Use a backend framework (NestJS)                   | Minor | 1      | **bcabocel**, **nofanizz**, **tlutz** |
+| 3   | Web                  | Real-time features with WebSockets                 | Major | 2      | **bcabocel**, **tlutz**, **abonneau** |
+| 4   | Web                  | Allow users to interact with other users           | Major | 2      | **bcabocel**, **nofanizz**            |
+| 5   | Web                  | Public API (API key, rate limiting, documentation) | Major | 2      | **bcabocel**, **nofanizz**            |
+| 6   | Web                  | Use an ORM for the database (Prisma)               | Minor | 1      | **bcabocel**, **nofanizz**, **tlutz** |
+| 7   | Web                  | Complete notification system                       | Minor | 1      | **bcabocel**                          |
+| 8   | Web                  | Server-Side Rendering (SSR)                        | Minor | 1      | **bcabocel**, **nofanizz**            |
+| 9   | Web                  | Custom-made design system                          | Minor | 1      | **bcabocel**, **nofanizz**            |
+| 10  | Web                  | Advanced search (filters, sorting, pagination)     | Minor | 1      | **bcabocel**, **nofanizz**            |
+| 11  | Web                  | File upload and management system                  | Minor | 1      | **bcabocel**, **nofanizz**            |
+| 12  | Accessibility & i18n | Accessibility compliance (WCAG 2.1 AA)             | Major | 2      | all                                   |
+| 13  | Accessibility & i18n | Support for multiple languages                     | Minor | 1      | all                                   |
+| 14  | Accessibility & i18n | Support for additional browsers                    | Minor | 1      | all                                   |
+| 15  | User management      | Standard user management and authentication        | Major | 2      | **bcabocel**, **nofanizz**, **tlutz** |
+| 16  | User management      | Game statistics and match history                  | Minor | 1      | **bcabocel**, **tlutz**               |
+| 17  | User management      | Organization system (group chats)                  | Major | 2      | **bcabocel**                          |
+| 18  | Gaming & UX          | Complete web-based game                            | Major | 2      | **tlutz**, **abonneau**               |
+| 19  | Gaming & UX          | Remote players                                     | Major | 2      | **tlutz**, **abonneau**               |
+| 20  | Gaming & UX          | Multiplayer game (more than two players)           | Major | 2      | **tlutz**, **abonneau**               |
+| 21  | Gaming & UX          | Advanced 3D graphics (Babylon.js)                  | Major | 2      | **abonneau**, **tlutz**               |
+| 22  | Gaming & UX          | Game customization options                         | Minor | 1      | **tlutz**, **abonneau**               |
+| 23  | Data & Analytics     | GDPR compliance features                           | Minor | 1      | **bcabocel**, **abonneau**            |
 
 |               | Count      | Points                      |
 | ------------- | ---------- | --------------------------- |
@@ -456,13 +484,13 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 
 - **Why:** we have dozens of pages (feed, profiles, chat, settings, wiki, game) that share layouts, data and state. A component framework is the only reasonable way to keep that maintainable.
 - **How:** [Next.js 16](https://nextjs.org/docs) (App Router) with [React 19](https://react.dev/). Routes are grouped into `(landing)` (public pages) and `(socket)/(hub)` (authenticated pages that open the WebSocket connections). Features live in `src/features/*` (api, hooks, components, schemas, stores). Server state is handled with [TanStack Query](https://tanstack.com/query/latest) and client state with [Zustand](https://zustand.docs.pmnd.rs/).
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 #### 2. Minor — Use a backend framework
 
 - **Why:** [NestJS](https://docs.nestjs.com/) gives us a strict modular architecture, dependency injection, guards, pipes and first-class WebSocket and Swagger support, which suits a team of several developers working on the same API.
 - **How:** `apps/network/server` is split into core modules (`config`, `database`, `security`, `rate-limit`, `storage`, `email`, `websocket`) and domain modules (`auth`, `user`, `post`, `relationship`, `chat`, `presence`, `upload`, `game`). Each domain module follows the same layers: controller → service → repository, with DTOs and mappers. Modules mainly talk to each other through [domain events](https://docs.nestjs.com/techniques/events) instead of direct imports.
-- **Who:** bcabocel, nofanizz, tlutz.
+- **Who:** **bcabocel**, **nofanizz**, **tlutz**.
 
 #### 3. Major — Real-time features using WebSockets
 
@@ -471,7 +499,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Socket.IO** ([NestJS gateways](https://docs.nestjs.com/websockets/gateways)) for chat and presence. A custom adapter authenticates each socket with the JWT cookie, and users join per-user and per-room channels so broadcasts only reach the right people ([rooms](https://socket.io/docs/v4/rooms/)). On disconnection, a timer marks the user offline only if they don't reconnect (multiple tabs and short drops are handled). Messages, edits, deletions, typing state, membership changes and friend requests are pushed live.
   - **Colyseus** ([docs](https://docs.colyseus.io/)) over WebSockets for the game, with binary delta-encoded state sync and a reconnection window.
   - Nginx proxies both protocols (`/socket.io`, `/game-socket/`) with the `Upgrade` headers and long timeouts.
-- **Who:** bcabocel (Socket.IO: chat and presence), tlutz and abonneau (Colyseus game).
+- **Who:** **bcabocel** (Socket.IO: chat and presence), **tlutz** and **abonneau** (Colyseus game).
 
 #### 4. Major — Allow users to interact with other users
 
@@ -481,7 +509,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Profiles**: `/[username]` with tabs for posts, comments, likes, reposts and game history.
   - **Friends**: requests with the PENDING and ACCEPTED states, friends list, removal, online status.
   - On top of that: blocking, posts, likes, replies, quotes and reposts.
-- **Who:** bcabocel (chat, friends, blocks, profiles), nofanizz (posts and social interactions).
+- **Who:** **bcabocel** (chat, friends, blocks, profiles), **nofanizz** (posts and social interactions).
 
 #### 5. Major — Public API
 
@@ -492,9 +520,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - Rate limiting uses [@nestjs/throttler](https://docs.nestjs.com/security/rate-limiting) with per-route presets (burst, sustained and daily limits).
   - Every input is validated by DTOs.
 
-<!-- TODO (team): the subject requires a secured API key and PUT routes. Describe here how the API key is generated, sent (header) and checked, and list the 5+ public endpoints. -->
-
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 #### 6. Minor — Use an ORM for the database
 
@@ -503,7 +529,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - `prisma/schema.prisma` defines 22 models.
   - 30+ [versioned migrations](https://www.prisma.io/docs/orm/prisma-migrate) are applied automatically when the API starts.
   - Repositories use typed `select` objects, [cursor pagination](https://www.prisma.io/docs/orm/prisma-client/queries/pagination#cursor-based-pagination) and [transactions](https://www.prisma.io/docs/orm/prisma-client/queries/transactions) (a unit-of-work service).
-- **Who:** bcabocel, nofanizz, tlutz.
+- **Who:** **bcabocel**, **nofanizz**, **tlutz**.
 
 #### 7. Minor — Complete notification system
 
@@ -513,13 +539,13 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - toasts ([Sonner](https://sonner.emilkowal.ski/)) for creation, update and deletion results (posts, messages, rooms, friendships, settings…);
   - automatic cache invalidation so lists update without a reload;
   - localized emails for account events (password reset, password change, account deletion).
-- **Who:** bcabocel.
+- **Who:** **bcabocel**.
 
 #### 8. Minor — Server-Side Rendering
 
 - **Why:** faster first paint, localized metadata for SEO on public pages (landing, wiki, legal pages), and no flash of untranslated content.
 - **How:** Next.js [Server Components](https://nextjs.org/docs/app/getting-started/server-and-client-components) render pages on the server. Translations are loaded server-side with `getTranslations`, and `generateMetadata` produces localized titles and descriptions. Interactive parts are isolated in client components.
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 #### 9. Minor — Custom-made design system
 
@@ -527,7 +553,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
 - **How:**
   - 45 reusable components in `src/components/ui`, built on [shadcn/ui](https://ui.shadcn.com/docs) and [Radix](https://www.radix-ui.com/primitives) and restyled. Examples: `button` (with variants), `input-search`, `input-password`, `step-indicator`, `media-modal`, `notification-bubble`, `kicker` and `progress-bar`.
   - A theme palette defined as CSS variables (light and dark, see [Tailwind theming](https://tailwindcss.com/docs/theme)), with typography and a [lucide](https://lucide.dev/) icon set plus custom icons (`components/icons`).
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 #### 10. Minor — Advanced search
 
@@ -538,7 +564,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Sorting:** `orderBy` parameters.
   - **Pagination:** cursor-based pagination with infinite scroll.
   - Searches are validated (100 characters max) and rate-limited.
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 #### 11. Minor — File upload and management system
 
@@ -550,9 +576,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - Images and documents are previewed in `media-attachment-previews` and `media-modal`.
   - Files can be deleted. Files of deleted entities are cleaned up by event listeners.
 
-<!-- TODO (team): the subject requires progress indicators for uploads, and none was found in the client. Add one (e.g. XHR upload progress), then describe it here. -->
-
-- **Who:** bcabocel, nofanizz.
+- **Who:** **bcabocel**, **nofanizz**.
 
 ### Accessibility and internationalization
 
@@ -564,9 +588,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - Interactive elements have `aria-*` labels, visible focus styles and `sr-only` text.
   - The `lang` attribute follows the active locale.
 
-<!-- TODO (team): describe the audit (Lighthouse / axe / WAVE), the screen readers tested (NVDA, VoiceOver…) and how keyboard navigation works in the game. References: https://www.w3.org/TR/WCAG21/ , https://www.w3.org/WAI/WCAG21/quickref/?levels=aaa -->
-
-- **Who:** bcabocel, abonneau.
+- **Who:** **bcabocel**, **abonneau**.
 
 #### 13. Minor — Support for multiple languages
 
@@ -576,14 +598,12 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - A language switcher in the UI, and the choice is saved in the user profile (`localePreference`).
   - Dates are localized with [date-fns](https://date-fns.org/docs/I18n), and emails use localized templates.
   - The game UI has its own i18n layer.
-- **Who:** bcabocel, nofanizz, abonneau.
+- **Who:** **bcabocel**, **nofanizz**, **abonneau**.
 
 #### 14. Minor — Support for additional browsers
 
 - **Why:** players should not be forced onto one browser.
 - **How:** the app and the game were tested on Chrome plus Firefox and other browsers. We use standard Web APIs only, and Babylon.js handles WebGL 2 differences.
-
-<!-- TODO (team): list the browsers and versions tested, and any browser-specific limitations. -->
 
 - **Who:** all.
 
@@ -599,7 +619,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - Users can edit their profile (display name, bio, location, website, cover) and upload an avatar, with a default avatar when none is set.
   - Friends with online status (presence module).
   - A public profile page for every user.
-- **Who:** bcabocel, nofanizz, tlutz.
+- **Who:** **bcabocel**, **nofanizz**, **tlutz**.
 
 #### 16. Minor — Game statistics and match history
 
@@ -608,7 +628,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - At the end of a game, the game server signs the stats with a JWT (`jose`) and sends them to the API (`POST /game`).
   - The API stores `GameStats`, `GamePlayerStats` and the weapon and tome levels, and updates `UserGameSummary` in a transaction.
   - The client shows the history (`/[username]/games-history`), game details (`/game/[id]`), profile stats (best survival time, kills, favorite weapons) and a leaderboard (`/game/leaderboard`) sortable by kills or survival time.
-- **Who:** bcabocel (API and pages), tlutz (game-side upload).
+- **Who:** **bcabocel** (API and pages), **tlutz** (game-side upload).
 
 #### 17. Major — Organization system
 
@@ -618,7 +638,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - Users can be added or removed (kick and leave).
   - Every member can view the group. Actions depend on the member's role (`OWNER`, `ADMIN`, `MEMBER`): owners and admins edit the group and manage members, owners promote or demote admins and can transfer ownership.
   - Each action creates a system message (`ChatMessageMetadata`) and is broadcast in real time.
-- **Who:** bcabocel.
+- **Who:** **bcabocel**.
 
 ### Gaming and user experience
 
@@ -629,7 +649,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Rules:** gain XP by killing monsters, level up, choose upgrades. A downed player can be revived by other players.
   - **Win and loss:** the game is lost when every player is down. The score is the survival time and the number of kills.
   - It is played live in the browser from `/game/play`.
-- **Who:** tlutz, abonneau.
+- **Who:** **tlutz**, **abonneau**.
 
 #### 19. Major — Remote players
 
@@ -639,7 +659,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - The state is synchronized as binary deltas.
   - Network input cadence is tuned to limit latency.
   - A disconnected player has a reconnection window of `40s` before being removed.
-- **Who:** tlutz, abonneau.
+- **Who:** **tlutz**, **abonneau**.
 
 #### 20. Major — Multiplayer game (more than two players)
 
@@ -649,7 +669,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - All players share the same monsters, world and timer.
   - Difficulty scales with time, and every simulation step runs on the server, so all clients see the same thing and nobody can cheat.
   - The protocol and gameplay rules live in `@transcendence/game-shared`, so every client follows exactly the same rules.
-- **Who:** tlutz, abonneau.
+- **Who:** **tlutz**, **abonneau**.
 
 #### 21. Major — Advanced 3D graphics
 
@@ -660,7 +680,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - dynamic lighting and shadows, tone mapping and anti-aliasing, a custom level-up shader effect and a glowing boundary;
   - a HUD built with [Babylon GUI](https://doc.babylonjs.com/features/featuresDeepDive/gui/gui);
   - performance tooling (frame-time history).
-- **Who:** abonneau, tlutz.
+- **Who:** **abonneau**, **tlutz**.
 
 #### 22. Minor — Game customization options
 
@@ -669,7 +689,7 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Abilities and power-ups:** 5 weapons (aura, staff, bow, sword, axe) and 11 tomes, offered as upgrade choices at each level-up.
   - **Maps:** the world is generated from a seed, so every game has a different map.
   - **Settings:** field of view and rebindable keys, with a "reset to defaults" button. Default values are always available.
-- **Who:** tlutz, abonneau.
+- **Who:** **tlutz**, **abonneau**.
 
 ### Data and analytics
 
@@ -681,4 +701,18 @@ All primary keys are `UUID` strings (`String @id @default(uuid())`), except `Ref
   - **Data deletion:** account deletion with password confirmation. It cascades to the user's personal data and keeps conversations consistent.
   - **Confirmation emails:** sent for the sensitive operations (password change, account deletion).
   - [Privacy policy](https://gdpr.eu/privacy-notice/) and terms of service pages.
-- **Who:** bcabocel, abonneau.
+- **Who:** **bcabocel**, **abonneau**.
+
+## Individual Contributions
+
+For specific modules and features description and member assignation, see [Features list](#features-list) and [Modules](#modules)
+
+Challenges faced:
+
+- **tlutz**: Building a game architecture able to support full multiplayer with full server-authoritative logic was a real challenge. Luckily, a lot of resources on the web helped him scaffold the project to fit the our needs.
+
+- **abonneau**: Staying within his assigned scope and follow collective decisions. This improved as the team clarified responsibilities and agreed on working rules.
+
+- **bcabocel**: Setting up the monorepo so that the game UI could be consumed by the network client was complex, particularly the Docker configuration (build context, workspace dependencies, and hot reload in dev). Careful organization of the workspace and the compose files made it work reliably.
+
+- **nofanizz**: With no prior web development experience, he initially found it difficult to understand how information travels between front end and back end, and how frameworks like Next.js and NestJS are structured. Integrating S3 storage was also challenging, as images were often removed. The landing page’s responsive design, particularly the media queries, was another demanding part.
